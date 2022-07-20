@@ -1,2 +1,2 @@
-export * from './block.component';
-export * from './block.module';
+export * from './events.component';
+export * from './events.module';

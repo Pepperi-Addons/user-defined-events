@@ -4,6 +4,9 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { TranslateLoader, TranslateModule, TranslateService, TranslateStore } from '@ngx-translate/core';
 import { PepAddonService } from '@pepperi-addons/ngx-lib';
+import { PepPageLayoutModule} from '@pepperi-addons/ngx-lib/page-layout'
+import { PepTopBarModule} from '@pepperi-addons/ngx-lib/top-bar'
+import { PepSizeDetectorModule} from '@pepperi-addons/ngx-lib/size-detector'
 
 import { EventsComponent } from './index';
 
@@ -20,6 +23,9 @@ export const routes: Routes = [
     declarations: [EventsComponent],
     imports: [
         CommonModule,
+        PepPageLayoutModule,
+        PepTopBarModule,
+        PepSizeDetectorModule,
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,
