@@ -2,7 +2,7 @@ import { AddonDataScheme, Relation } from "@pepperi-addons/papi-sdk";
 import config from '../../addon.config.json';
 
 const blockName = 'Events';
-const fileName = `file_${config.AddonUUID.replace('/-/g','_').toLowerCase()}`;
+const fileName = `file_${config.AddonUUID.replace(/-/g, '_').toLowerCase()}`;
 
 export const EventsInterceptorsScheme : AddonDataScheme = {
     Name: 'event_interceptors',
