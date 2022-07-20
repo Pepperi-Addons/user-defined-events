@@ -1,4 +1,4 @@
-import { PapiClient, InstalledAddon, AddonDataScheme } from '@pepperi-addons/papi-sdk'
+import { PapiClient, InstalledAddon, AddonDataScheme, Relation } from '@pepperi-addons/papi-sdk'
 import { Client } from '@pepperi-addons/debug-server';
 
 export class UtilitiesService {
@@ -17,5 +17,9 @@ export class UtilitiesService {
 
     async createAdalTable(table: AddonDataScheme): Promise<AddonDataScheme> {
         return await this.papiClient.addons.data.schemes.post(table);
+    }
+
+    async createRelation(relation: Relation): Promise<Relation> {
+        return await this.papiClient.addons.data.relations.upsert(relation);
     }
 }

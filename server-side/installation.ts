@@ -10,7 +10,7 @@ The error Message is importent! it will be written in the audit log and help the
 
 import { Client, Request } from '@pepperi-addons/debug-server'
 import {UtilitiesService} from './services/utilities-service';
-import { EventsInterceptorsScheme } from 'shared';
+import { EventsInterceptorsScheme, EventsAddonBlockRelation } from 'shared';
 
 export async function install(client: Client, request: Request): Promise<any> {
     // For block template uncomment this.
@@ -35,6 +35,7 @@ async function createObjects(client: Client) {
     try {
         const service = new UtilitiesService(client);
         await service.createAdalTable(EventsInterceptorsScheme);
+        await service.createRelation(EventsAddonBlockRelation);
         return {
             success:true,
             resultObject: {}
