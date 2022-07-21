@@ -10,7 +10,55 @@ export const EventsInterceptorsScheme : AddonDataScheme = {
     SyncData: {
         Sync: true,
     },
-    AddonUUID: config.AddonUUID
+    AddonUUID: config.AddonUUID,
+    Fields: {
+        AddonUUID: {
+            Type: 'String',
+        },
+        Group: {
+            Type: 'String'
+        },
+        EventKey: {
+            Type: 'String',            
+        },
+        EventField: {
+            Type: 'String'
+        },
+        EventFilter: {
+            Type: 'String'
+        },
+        LogicBlocks: {
+            Type: 'Array',
+            Items: {
+                Type: 'Object',
+                Fields: {
+                    Relation: {
+                        Type: 'Object',
+                        Fields: {
+                            AddonUUID: {
+                                Type: 'String'
+                            },
+                            Name: {
+                                Type: 'String'
+                            }
+                        }
+                    },
+                    Name: {
+                        Type: 'String'
+                    },
+                    Configuration: {
+                        Type: 'String'
+                    },
+                    Disabled: {
+                        Type: 'Bool'
+                    },
+                    ParallelExecutionGroup: {
+                        Type: 'Integer'
+                    }
+                }
+            }
+        }
+    }
 }
 
 export const EventsAddonBlockRelation: Relation = {
