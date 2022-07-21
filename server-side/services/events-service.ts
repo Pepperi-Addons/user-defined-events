@@ -15,6 +15,10 @@ export class EventsService {
     
     async upsert(obj: EventInterceptor): Promise<EventInterceptor> {
         obj.Key = `${obj.AddonUUID}_${obj.Group}_${obj.EventKey}`;
+        // field events are not unique, we need to add the field to make it unique
+        if (obj.EventField) { 
+            obj.Key = `${obj.Key}_${obj.EventField}`;
+        }
         return await this.utilitiesService.papiClient.addons.data.uuid(this.client.AddonUUID).table(EventsInterceptorsScheme.Name).upsert(obj) as EventInterceptor;
     }
     
