@@ -1,5 +1,13 @@
 import { TranslateService } from '@ngx-translate/core';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+
+import { IPepGenericListActions, IPepGenericListDataSource, GenericListComponent } from '@pepperi-addons/ngx-composite-lib/generic-list';
+import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
+import { PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
+
+import { EventsService } from '../services/events-service';
+import { EventInterceptor } from 'shared';
 
 @Component({
     selector: 'events',
@@ -11,13 +19,141 @@ export class EventsComponent implements OnInit {
 
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
-    constructor(private translate: TranslateService) {
+    @ViewChild('eventsList', {read: GenericListComponent}) eventsList: GenericListComponent
+
+    dataSource: IPepGenericListDataSource;
+    listMessages: {[key:string]: string};
+    events: EventInterceptor[] = [];
+
+    constructor(
+        private translate: TranslateService,
+        private eventsService: EventsService,
+        private router: Router,
+        private activateRoute: ActivatedRoute,
+        private dialogService: PepDialogService) {
     }
 
-    ngOnInit(): void {
+    ngOnInit() {
+        this.translate.get(['Events_List_NoDataFound']).subscribe(translations=> {
+            this.listMessages = translations;
+            this.dataSource = this.getDataSource();
+        })
     }
 
-    ngOnChanges(e: any): void {
+    getDataSource() {
+        return {
+            init: async(params:any) => {
+                this.events = await this.eventsService.getEvents();
+                return Promise.resolve({
+                    dataView: {
+                        Context: {
+                            Name: '',
+                            Profile: { InternalID: 0 },
+                            ScreenSize: 'Landscape'
+                        },
+                        Type: 'Grid',
+                        Title: '',
+                        Fields: [
+                            {
+                                FieldID: 'EventKey',
+                                Type: 'TextBox',
+                                Title: this.translate.instant('Name'),
+                                Mandatory: false,
+                                ReadOnly: true
+                            },
+                            {
+                                FieldID: 'EventField',
+                                Type: 'TextBox',
+                                Title: this.translate.instant('Field'),
+                                Mandatory: false,
+                                ReadOnly: true
+                            },
+                        ],
+                        Columns: [
+                            {
+                                Width: 50
+                            },
+                            {
+                                Width: 50
+                            }
+                        ],
+        
+                        FrozenColumnsCount: 0,
+                        MinimumColumnWidth: 0
+                    },
+                    totalCount: this.events.length,
+                    items: this.events
+                });
+            },
+            inputs: {
+                pager: {
+                    type: 'scroll'
+                },
+                selectionType: 'single',
+                noDataFoundMsg: this.listMessages['Events_List_NoDataFound']
+            },
+        } as IPepGenericListDataSource
+    }
 
+    actions: IPepGenericListActions = {
+        get: async (data: PepSelectionData) => {
+            const actions = [];
+            if (data && data.rows.length == 1) {
+                actions.push({
+                    title: this.translate.instant('Edit'),
+                    handler: async (objs) => {
+                        this.navigateToEventForm(objs.rows[0]);
+                    }
+                });
+                actions.push({
+                    title: this.translate.instant('Delete'),
+                    handler: async (objs) => {
+                        let item = undefined;
+                        if(this.eventsList) {
+                            item = this.eventsList.getItemById(objs.rows[0])
+                        }
+                        this.showDeleteDialog(item);
+                    }
+                })
+            }
+            return actions;
+        }
+    }
+
+    navigateToEventForm(name: string) {
+        this.router.navigate([name], {
+            relativeTo: this.activateRoute,
+            queryParamsHandling: 'preserve',
+        })
+    }
+
+    showDeleteDialog(obj: EventInterceptor) {
+        const dataMsg = new PepDialogData({
+            title: this.translate.instant('Events_DeleteDialogTitle'),
+            actionsType: 'cancel-delete',
+            content: this.translate.instant('Events_DeleteDialogContent')
+        });
+        this.dialogService.openDefaultDialog(dataMsg).afterClosed()
+        .subscribe(async (isDeletePressed) => {
+            if (isDeletePressed) {
+                try {
+                    obj.Hidden = true;
+                    await this.eventsService.upsertEvent(obj);
+                    this.dataSource = this.getDataSource();
+                }
+                catch (error) {
+                    const dataMsg = new PepDialogData({
+                        title: this.translate.instant('Events_DeleteFailedDialogTitle'),
+                        actionsType: 'close',
+                        content: this.translate.instant('Events_DeleteFailedDialogError')
+                    });
+                    this.dialogService.openDefaultDialog(dataMsg);
+                }
+            }
+        });
+    }
+
+    openEventsForm() {
+        console.log('add event');
     }
 }
