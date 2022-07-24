@@ -19,3 +19,10 @@ export interface LogicBlock {
     Disabled: boolean;
     ParallelExecutionGroup: number;
 }
+
+export interface SelectOption<T> {
+    key: T;
+    value: string;
+}
+
+export type SelectOptions<T> = Array<SelectOption<T>>;

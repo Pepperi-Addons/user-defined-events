@@ -4,5 +4,13 @@
     "Events_DeleteDialogTitle": "Delete Event",
     "Events_DeleteDialogContent": "Are you sure you want to delete this event?",
     "Events_DeleteFailedDialogTitle":"Delete Event Failed",
-    "Events_DeleteFailedDialogError":"Delete event has failed. Please try again later."
+    "Events_DeleteFailedDialogError":"Delete event has failed. Please try again later.",
+    "AddDialog_Title": "Add event",
+    "AddDialog_SubTitle": "define the event",
+    "AddDialog_Event_Label": "Event",
+    "AddDialog_Field_Label": "Field",
+    "AddDialog_CancelButton": "Back to list",
+    "AddDialog_UpdateButton": "Update",
+    "AddDialog_Failure_Title": "Creation failed",
+    "AddDialog_Failure_Content": "Failed to create event. please try again later."
 }

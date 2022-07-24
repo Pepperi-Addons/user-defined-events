@@ -8,6 +8,8 @@ import { PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog'
 
 import { EventsService } from '../services/events-service';
 import { EventInterceptor } from 'shared';
+import { CreateEventComponent } from '../create-event/create-event.component';
+import { CreateFormData, HostEvent } from 'src/entities';
 
 @Component({
     selector: 'events',
@@ -15,7 +17,7 @@ import { EventInterceptor } from 'shared';
     styleUrls: ['./events.component.scss']
 })
 export class EventsComponent implements OnInit {
-    @Input() hostObject: any;
+    @Input() hostObject: HostEvent;
 
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
@@ -147,7 +149,25 @@ export class EventsComponent implements OnInit {
         });
     }
 
-    openEventsForm() {
-        console.log('add event');
+    openCreateEventsForm() {
+        const possibleEvents = this.hostObject.PossibleEvents.filter(event => {
+            return this.events.find(item => item.EventKey === event.EventKey) === undefined || event.SupportField;
+        })
+        const formData: CreateFormData = {
+            Events: possibleEvents,
+            Fields: this.hostObject.PossibleFields,
+            AddonUUID: this.hostObject.AddonUUID,
+            Group: this.hostObject.Group,
+        }
+        const dialogConfig = this.dialogService.getDialogConfig({}, 'regular');
+        dialogConfig.data = {
+            content: CreateEventComponent
+        }
+
+        this.dialogService.openDialog(CreateEventComponent, formData, dialogConfig).afterClosed().subscribe((createdEvent)=> {
+            if(createdEvent) {
+                this.navigateToEventForm(createdEvent.Key);
+            }
+        })
     }
 }
