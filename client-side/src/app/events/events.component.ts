@@ -44,7 +44,7 @@ export class EventsComponent implements OnInit {
         return {
             init: async(params:any) => {
                 this.events = await this.eventsService.getEvents();
-                return Promise.resolve({
+                return {
                     dataView: {
                         Context: {
                             Name: '',
@@ -83,7 +83,7 @@ export class EventsComponent implements OnInit {
                     },
                     totalCount: this.events.length,
                     items: this.events
-                });
+                };
             },
             inputs: {
                 pager: {
@@ -117,10 +117,7 @@ export class EventsComponent implements OnInit {
     }
 
     navigateToEventForm(name: string) {
-        this.router.navigate([name], {
-            relativeTo: this.activateRoute,
-            queryParamsHandling: 'preserve',
-        })
+        console.log(`edit event clicked. chosen event: ${name}`);
     }
 
     showDeleteDialog(objID: string) {
