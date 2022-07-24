@@ -108,11 +108,7 @@ export class EventsComponent implements OnInit {
                 actions.push({
                     title: this.translate.instant('Delete'),
                     handler: async (objs) => {
-                        let item = undefined;
-                        if(this.eventsList) {
-                            item = this.eventsList.getItemById(objs.rows[0])
-                        }
-                        this.showDeleteDialog(item);
+                        this.showDeleteDialog(objs.rows[0]);
                     }
                 })
             }
@@ -127,7 +123,7 @@ export class EventsComponent implements OnInit {
         })
     }
 
-    showDeleteDialog(obj: EventInterceptor) {
+    showDeleteDialog(objID: string) {
         const dataMsg = new PepDialogData({
             title: this.translate.instant('Events_DeleteDialogTitle'),
             actionsType: 'cancel-delete',
@@ -137,6 +133,7 @@ export class EventsComponent implements OnInit {
         .subscribe(async (isDeletePressed) => {
             if (isDeletePressed) {
                 try {
+                    const obj:EventInterceptor = this.events.find(item => item.Key === objID);
                     obj.Hidden = true;
                     await this.eventsService.upsertEvent(obj);
                     this.dataSource = this.getDataSource();
