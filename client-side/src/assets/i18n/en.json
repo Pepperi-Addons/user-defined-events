@@ -1,3 +1,8 @@
 {
-    "TITLE": "Events ABI"
+    "Events_List_Title": "Events List",
+    "Events_List_NoDataFound": "Click Add to defined event",
+    "Events_DeleteDialogTitle": "Delete Event",
+    "Events_DeleteDialogContent": "Are you sure you want to delete this event?",
+    "Events_DeleteFailedDialogTitle":"Delete Event Failed",
+    "Events_DeleteFailedDialogError":"Delete event has failed. Please try again later."
 }
