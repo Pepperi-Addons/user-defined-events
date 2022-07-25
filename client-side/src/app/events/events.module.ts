@@ -4,16 +4,17 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { TranslateLoader, TranslateModule, TranslateService, TranslateStore } from '@ngx-translate/core';
 import { PepAddonService } from '@pepperi-addons/ngx-lib';
-import { PepPageLayoutModule} from '@pepperi-addons/ngx-lib/page-layout';
-import { PepTopBarModule} from '@pepperi-addons/ngx-lib/top-bar';
-import { PepSizeDetectorModule} from '@pepperi-addons/ngx-lib/size-detector';
 import { PepGenericListModule } from '@pepperi-addons/ngx-composite-lib/generic-list';
+import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
+import { PepDialogModule } from '@pepperi-addons/ngx-lib/dialog';
+import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { EventsComponent } from './index';
 import { EventsService } from '../services/events-service'
-
 import { config } from '../addon.config';
-import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
+import { CreateEventComponent } from '../create-event/create-event.component'
+
 
 export const routes: Routes = [
     {
@@ -23,18 +24,21 @@ export const routes: Routes = [
 ];
 
 @NgModule({
-    declarations: [EventsComponent],
+    declarations: [
+        EventsComponent,
+        CreateEventComponent
+    ],
     imports: [
         CommonModule,
-        PepPageLayoutModule,
-        PepTopBarModule,
-        PepSizeDetectorModule,
         PepGenericListModule,
         PepButtonModule,
+        PepDialogModule,
+        PepSelectModule,
+        MatDialogModule,
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,
-                useFactory: (addonService: PepAddonService) => 
+                useFactory: (addonService: PepAddonService) =>
                     PepAddonService.createMultiTranslateLoader(addonService, ['ngx-lib', 'ngx-composite-lib'], config.AddonUUID),
                 deps: [PepAddonService]
             }, isolate: false
