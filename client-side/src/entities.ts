@@ -1,3 +1,5 @@
+import { EventInterceptor } from "shared";
+
 export interface HostEvent {
     PossibleEvents: EventData[];
     PossibleFields: string[];
@@ -16,5 +18,6 @@ export interface CreateFormData {
     Fields: string[];
     AddonUUID: string;
     Group: string;
+    CurrentEvents: Map<string, EventInterceptor[]>
 }
 

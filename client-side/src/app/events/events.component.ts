@@ -7,7 +7,7 @@ import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
 import { PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 
 import { EventsService } from '../services/events-service';
-import { EventInterceptor } from 'shared';
+import { EventInterceptor, groupBy } from 'shared';
 import { CreateEventComponent } from '../create-event/create-event.component';
 import { CreateFormData, HostEvent } from 'src/entities';
 
@@ -150,14 +150,13 @@ export class EventsComponent implements OnInit {
     }
 
     openCreateEventsForm() {
-        const possibleEvents = this.hostObject.PossibleEvents.filter(event => {
-            return this.events.find(item => item.EventKey === event.EventKey) === undefined || event.SupportField;
-        })
+        const groupedEvents = groupBy(this.events, (item)=>item.EventKey);
         const formData: CreateFormData = {
-            Events: possibleEvents,
+            Events: this.hostObject.PossibleEvents,
             Fields: this.hostObject.PossibleFields,
             AddonUUID: this.hostObject.AddonUUID,
             Group: this.hostObject.Group,
+            CurrentEvents: groupedEvents,
         }
         const dialogConfig = this.dialogService.getDialogConfig({}, 'regular');
         dialogConfig.data = {

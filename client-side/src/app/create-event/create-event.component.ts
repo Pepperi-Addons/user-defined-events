@@ -30,7 +30,7 @@ export class CreateEventComponent implements OnInit {
   ) {
 
     if (incoming.Events.length > 0) {
-      this.possibleEvents = incoming.Events.map(event => {
+      this.possibleEvents = incoming.Events.filter(event => incoming.CurrentEvents.get(event.EventKey) === undefined || event.SupportField).map(event => {
         return {
           key: event.EventKey,
           value: event.EventKey
@@ -52,8 +52,29 @@ export class CreateEventComponent implements OnInit {
   eventKeyChanged(value) {
     const event = this.incoming.Events.find(event => event.EventKey === value);
     if (event) {
-      this.eventSupportsField = event.SupportField;
-      this.isValid = !this.eventSupportsField;
+        this.eventSupportsField = event.SupportField;
+        this.isValid = !this.eventSupportsField;
+        // if the event support field, we need to filter out the fields already defined for this event
+        if (event.SupportField) {
+          this.eventField = '';
+          this.possibleFields = this.incoming.Fields.filter(field => {
+            const events = this.incoming.CurrentEvents.get(event.EventKey);
+            if (events) {
+              if (events.find(item => item.EventField === field)) {
+                return false;
+              }
+              else {
+                return true;
+              }
+            }
+            return true;
+          }).map(field => {
+            return {
+              key: field,
+              value: field
+            }
+          })
+        }
     }
     else {
       console.error(`could not find event ${value}`);
