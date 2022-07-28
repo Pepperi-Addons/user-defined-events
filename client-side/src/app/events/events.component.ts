@@ -1,6 +1,6 @@
 import { TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewContainerRef } from '@angular/core';
 
 import { IPepGenericListActions, IPepGenericListDataSource, GenericListComponent } from '@pepperi-addons/ngx-composite-lib/generic-list';
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
@@ -10,6 +10,7 @@ import { EventsService } from '../services/events-service';
 import { EventInterceptor, groupBy } from 'shared';
 import { CreateEventComponent } from '../create-event/create-event.component';
 import { CreateFormData, HostEvent } from 'src/entities';
+import { EditorLoaderService } from '../services/editor-loader-service';
 
 @Component({
     selector: 'events',
@@ -32,7 +33,9 @@ export class EventsComponent implements OnInit {
         private eventsService: EventsService,
         private router: Router,
         private activateRoute: ActivatedRoute,
-        private dialogService: PepDialogService) {
+        private viewContainer: ViewContainerRef,
+        private dialogService: PepDialogService,
+        private editorLoaderService: EditorLoaderService) {
     }
 
     ngOnInit() {
@@ -118,8 +121,36 @@ export class EventsComponent implements OnInit {
         }
     }
 
-    navigateToEventForm(name: string) {
+    navigateToEventForm(itemKey: string) {
         console.log(`edit event clicked. chosen event: ${name}`);
+        const chosenEvent = this.events.find(event => event.Key === itemKey);
+        this.editorLoaderService.loadAddonBlockInDialog({
+            block: {
+                Relation: {
+                    Name: 'ExampleBlock',
+                    AddonUUID: 'bd822717-76bc-480c-8f71-7f38b1bab0cb'
+                },
+                Disabled: false,
+                ParallelExecutionGroup: 1,
+                Name: 'Testing',
+                Configuration: ""
+            }, 
+            container: this.viewContainer,
+            name: '',
+            hostObject: {
+                slug: 'accounts',
+            },
+            hostEventsCallback: (event) => {
+                console.log(`event caught: ${JSON.stringify(event)}`);
+            },
+            size: 'large',
+            data: {
+                showClose: true,
+                showFooter: false,
+                showHeader: true,
+                title: 'Editor Configuration Dialog'
+            }
+        })
     }
 
     showDeleteDialog(objID: string) {
