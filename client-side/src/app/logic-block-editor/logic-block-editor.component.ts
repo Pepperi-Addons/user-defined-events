@@ -29,7 +29,6 @@ export class LogicBlockEditorComponent implements OnInit {
 
   ngOnInit(): void {
     this.logicBlocksService.getLogicBlockRelation(this.logicBlock.Relation.Name, this.logicBlock.Relation.AddonUUID).then(async(relation) => {
-      debugger;
       if (relation) {
         this.remotePathOptions = await this.editorLoaderService.getRemoteOptions(relation);
         this.remotePathOptionsString = JSON.stringify(this.remotePathOptions);
@@ -46,8 +45,8 @@ export class LogicBlockEditorComponent implements OnInit {
         }
         case 'set-configuration': {
           console.log(`configuration obj got: ${event.configuration}`);
-          this.hostEvents.emit(event);
           this.dialogRef?.close();
+          this.hostEvents.emit(event);
           break;
         }
       }
