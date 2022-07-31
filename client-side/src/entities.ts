@@ -1,4 +1,5 @@
-import { EventInterceptor } from "shared";
+import { IAddonBlockLoaderDialogOptions } from "@pepperi-addons/ngx-lib/remote-loader";
+import { EventInterceptor, LogicBlock } from "shared";
 
 export interface HostEvent {
     PossibleEvents: EventData[];
@@ -19,5 +20,9 @@ export interface CreateFormData {
     AddonUUID: string;
     Group: string;
     CurrentEvents: Map<string, EventInterceptor[]>
+}
+
+export interface LogicBlockEditorOptions extends IAddonBlockLoaderDialogOptions {
+    block: LogicBlock;
 }
 

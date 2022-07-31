@@ -10,10 +10,18 @@ import { PepDialogModule } from '@pepperi-addons/ngx-lib/dialog';
 import { PepSelectModule } from '@pepperi-addons/ngx-lib/select';
 import { MatDialogModule } from '@angular/material/dialog';
 
-import { EventsComponent } from './index';
-import { EventsService } from '../services/events-service'
 import { config } from '../addon.config';
+
+import { EventsService } from '../services/events-service'
+import { UtilitiesService } from '../services/utilitiles-service'
+import { LogicBlocksService } from '../services/logic-blocks-service'
+import { EditorLoaderService } from '../services/editor-loader-service'
+
 import { CreateEventComponent } from '../create-event/create-event.component'
+import { LogicBlockEditorComponent } from '../logic-block-editor/logic-block-editor.component'
+
+import { EventsComponent } from './index';
+import { PepRemoteLoaderModule } from '@pepperi-addons/ngx-lib/remote-loader';
 
 
 export const routes: Routes = [
@@ -26,7 +34,8 @@ export const routes: Routes = [
 @NgModule({
     declarations: [
         EventsComponent,
-        CreateEventComponent
+        CreateEventComponent,
+        LogicBlockEditorComponent
     ],
     imports: [
         CommonModule,
@@ -35,6 +44,7 @@ export const routes: Routes = [
         PepDialogModule,
         PepSelectModule,
         MatDialogModule,
+        PepRemoteLoaderModule,
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,
@@ -49,6 +59,9 @@ export const routes: Routes = [
     providers: [
         TranslateStore,
         EventsService,
+        LogicBlocksService,
+        UtilitiesService,
+        EditorLoaderService,
         // Add here all used services.
     ]
 })

@@ -5,37 +5,21 @@ import { PapiClient } from "@pepperi-addons/papi-sdk";
 
 import { config } from '../addon.config'
 import { EventInterceptor } from 'shared';
+import { UtilitiesService } from './utilitiles-service';
 
 @Injectable({providedIn:'root'})
 export class EventsService {
 
-    accessToken = '';
-    parsedToken: any;
-    papiBaseURL = '';
-
-    get papiClient(): PapiClient {
-        return new PapiClient({
-            baseURL: this.papiBaseURL,
-            token: this.session.getIdpToken(),
-            addonUUID: config.AddonUUID,
-            suppressLogging:true
-        })
-    }
-
     constructor(
-        public session:  PepSessionService,
-        private pepHttp: PepHttpService
+        public utilitiesService:  UtilitiesService,
     ) {
-        const accessToken = this.session.getIdpToken();
-        this.parsedToken = jwt(accessToken);
-        this.papiBaseURL = this.parsedToken["pepperi.baseurl"];
     }
 
     async getEvents(): Promise<EventInterceptor[]> {
-        return this.papiClient.addons.api.uuid(config.AddonUUID).file('api').func('event_interceptor').get();
+        return this.utilitiesService.papiClient.addons.api.uuid(config.AddonUUID).file('api').func('event_interceptor').get();
     }
     
     async upsertEvent(obj: EventInterceptor): Promise<EventInterceptor> {
-        return this.papiClient.addons.api.uuid(config.AddonUUID).file('api').func('event_interceptor').post({}, obj);
+        return this.utilitiesService.papiClient.addons.api.uuid(config.AddonUUID).file('api').func('event_interceptor').post({}, obj);
     }
 }
