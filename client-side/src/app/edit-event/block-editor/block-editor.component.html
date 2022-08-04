@@ -1,0 +1,8 @@
+<div class="block-wrapper">
+    <pep-textbox [label]="'EditEvent_ChosenBlock_Name' | translate" [(value)]="block.Name"></pep-textbox>
+    <pep-checkbox [label]="'EditEvent_ChosenBlock_Disabled' | translate" [(value)]="block.Disabled"></pep-checkbox>
+    <pep-textbox [label]="'EditEvent_ChosenBlock_GroupIndex' | translate" [(value)]="block.ParallelExecutionGroup"></pep-textbox>
+
+    <pep-button styleType="weak-invert" sizeType="md" iconPosition="end" iconName="system_edit" [title]="'Edit' | translate" (buttonClick)="onEditBlock($event, block)"></pep-button>
+    <pep-button styleType="weak-invert" sizeType="md" iconPosition="end" iconName="system_bin" [title]="'Delete' | translate" (buttonClick)="onDeleteBlock($event, block)"></pep-button>
+</div>

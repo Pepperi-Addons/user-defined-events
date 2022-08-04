@@ -4,7 +4,12 @@
     "projects": {
         "block": {
             "projectType": "application",
-            "schematics": {},
+            "schematics": {
+                "@schematics/angular:component": {
+                    "skipTests": true,
+                    "style": "scss"
+                }    
+            },
             "root": "./",
             "sourceRoot": "src",
             "prefix": "app",
@@ -89,6 +94,12 @@
                     "defaultConfiguration": "development"
                 }
             }
+        }
+    },
+    "schematics": {
+        "@schematics/angular:component": {
+            "skipTests": true,
+            "style": "scss"
         }
     },
     "defaultProject": "block",
