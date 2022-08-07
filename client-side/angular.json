@@ -91,6 +91,12 @@
             }
         }
     },
+    "schematics": {
+        "@schematics/angular:component": {
+            "skipTests": true,
+            "style": "scss"
+        }
+    },
     "defaultProject": "block",
     "cli": {
         "analytics": false

@@ -9,8 +9,10 @@ import { PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog'
 import { EventsService } from '../services/events-service';
 import { EventInterceptor, groupBy } from 'shared';
 import { CreateEventComponent } from '../create-event/create-event.component';
-import { CreateFormData, HostEvent } from 'src/entities';
-import { EditorLoaderService } from '../services/editor-loader-service';
+import { ActionClickedEventData, CreateFormData, HostEvent } from 'src/entities';
+import { BlockConfigurationLoaderService } from '../services/block-configuration-loader-service';
+import { BlocksService } from '../services/blocks-service';
+import { IPepDraggableItem } from '@pepperi-addons/ngx-lib/draggable-items';
 
 @Component({
     selector: 'events',
@@ -22,135 +24,85 @@ export class EventsComponent implements OnInit {
 
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
 
-    @ViewChild('eventsList', {read: GenericListComponent}) eventsList: GenericListComponent
-
-    dataSource: IPepGenericListDataSource;
-    listMessages: {[key:string]: string};
     events: EventInterceptor[] = [];
+    availableBlocks: Array<IPepDraggableItem> = [];
+    chosenEvent: EventInterceptor = null;
 
     constructor(
         private translate: TranslateService,
         private eventsService: EventsService,
-        private router: Router,
-        private activateRoute: ActivatedRoute,
-        private viewContainer: ViewContainerRef,
         private dialogService: PepDialogService,
-        private editorLoaderService: EditorLoaderService) {
+        private blocksService: BlocksService) {
     }
 
     ngOnInit() {
-        this.translate.get(['Events_List_NoDataFound']).subscribe(translations=> {
-            this.listMessages = translations;
-            this.dataSource = this.getDataSource();
+        this.updateEvents();
+        this.blocksService.getAvailableBlocks().then(relations => {
+            this.availableBlocks = relations.map(relation => {
+              return {
+                title: relation.Name,
+                disabled: false,
+                data: {
+                  addonUUID: relation.AddonUUID
+                }
+              }
+            })
+          })
+    }
+
+    updateEvents() {
+        this.eventsService.getEvents().then(events => {
+            this.events = [...events];
         })
     }
 
-    getDataSource() {
-        return {
-            init: async(params:any) => {
-                this.events = await this.eventsService.getEvents();
-                return {
-                    dataView: {
-                        Context: {
-                            Name: '',
-                            Profile: { InternalID: 0 },
-                            ScreenSize: 'Landscape'
-                        },
-                        Type: 'Grid',
-                        Title: '',
-                        Fields: [
-                            {
-                                FieldID: 'EventKey',
-                                Type: 'TextBox',
-                                Title: this.translate.instant('Name'),
-                                Mandatory: false,
-                                ReadOnly: true
-                            },
-                            {
-                                FieldID: 'EventField',
-                                Type: 'TextBox',
-                                Title: this.translate.instant('Field'),
-                                Mandatory: false,
-                                ReadOnly: true
-                            },
-                        ],
-                        Columns: [
-                            {
-                                Width: 50
-                            },
-                            {
-                                Width: 50
-                            }
-                        ],
-        
-                        FrozenColumnsCount: 0,
-                        MinimumColumnWidth: 0
-                    },
-                    totalCount: this.events.length,
-                    items: this.events
-                };
-            },
-            inputs: {
-                pager: {
-                    type: 'scroll'
-                },
-                selectionType: 'single',
-                noDataFoundMsg: this.listMessages['Events_List_NoDataFound']
-            },
-        } as IPepGenericListDataSource
-    }
-
-    actions: IPepGenericListActions = {
-        get: async (data: PepSelectionData) => {
-            const actions = [];
-            if (data && data.rows.length == 1) {
-                actions.push({
-                    title: this.translate.instant('Edit'),
-                    handler: async (objs) => {
-                        this.navigateToEventForm(objs.rows[0]);
-                    }
-                });
-                actions.push({
-                    title: this.translate.instant('Delete'),
-                    handler: async (objs) => {
-                        this.showDeleteDialog(objs.rows[0]);
-                    }
-                })
+    onActionClicked(data: ActionClickedEventData) {
+        switch (data.ActionType) {
+            case 'Add': {
+                this.openCreateEventsForm();
+                break;
             }
-            return actions;
+            case 'Edit': {
+                this.navigateToEventForm(data.ItemKey);
+                break;
+            }
+            case 'Delete': {
+                this.showDeleteDialog(data.ItemKey);
+                break;
+            }
         }
     }
 
     navigateToEventForm(itemKey: string) {
-        console.log(`edit event clicked. chosen event: ${name}`);
-        const chosenEvent = this.events.find(event => event.Key === itemKey);
-        this.editorLoaderService.loadAddonBlockInDialog({
-            block: {
-                Relation: {
-                    Name: 'ExampleBlock',
-                    AddonUUID: 'bd822717-76bc-480c-8f71-7f38b1bab0cb'
-                },
-                Disabled: false,
-                ParallelExecutionGroup: 1,
-                Name: 'Testing',
-                Configuration: ""
-            }, 
-            container: this.viewContainer,
-            name: '',
-            hostObject: {
-                slug: 'accounts',
-            },
-            hostEventsCallback: (event) => {
-                console.log(`event caught: ${JSON.stringify(event)}`);
-            },
-            size: 'large',
-            data: {
-                showClose: true,
-                showFooter: false,
-                showHeader: true,
-                title: 'Editor Configuration Dialog'
-            }
-        })
+        console.log(`edit event clicked. chosen event: ${itemKey}`);
+        this.chosenEvent = this.events.find(event => event.Key === itemKey);
+        // this.editorLoaderService.loadAddonBlockInDialog({
+        //     block: {
+        //         Relation: {
+        //             Name: 'ExampleBlock',
+        //             AddonUUID: 'bd822717-76bc-480c-8f71-7f38b1bab0cb'
+        //         },
+        //         Disabled: false,
+        //         ParallelExecutionGroup: 1,
+        //         Name: 'Testing',
+        //         Configuration: ""
+        //     },
+        //     container: this.viewContainer,
+        //     name: '',
+        //     hostObject: {
+        //         slug: 'accounts',
+        //     },
+        //     hostEventsCallback: (event) => {
+        //         console.log(`event caught: ${JSON.stringify(event)}`);
+        //     },
+        //     size: 'large',
+        //     data: {
+        //         showClose: true,
+        //         showFooter: false,
+        //         showHeader: true,
+        //         title: 'Editor Configuration Dialog'
+        //     }
+        // })
     }
 
     showDeleteDialog(objID: string) {
@@ -160,28 +112,28 @@ export class EventsComponent implements OnInit {
             content: this.translate.instant('Events_DeleteDialogContent')
         });
         this.dialogService.openDefaultDialog(dataMsg).afterClosed()
-        .subscribe(async (isDeletePressed) => {
-            if (isDeletePressed) {
-                try {
-                    const obj:EventInterceptor = this.events.find(item => item.Key === objID);
-                    obj.Hidden = true;
-                    await this.eventsService.upsertEvent(obj);
-                    this.dataSource = this.getDataSource();
+            .subscribe(async (isDeletePressed) => {
+                if (isDeletePressed) {
+                    try {
+                        const obj: EventInterceptor = this.events.find(item => item.Key === objID);
+                        obj.Hidden = true;
+                        await this.eventsService.upsertEvent(obj);
+                        this.updateEvents();
+                    }
+                    catch (error) {
+                        const dataMsg = new PepDialogData({
+                            title: this.translate.instant('Events_DeleteFailedDialogTitle'),
+                            actionsType: 'close',
+                            content: this.translate.instant('Events_DeleteFailedDialogError')
+                        });
+                        this.dialogService.openDefaultDialog(dataMsg);
+                    }
                 }
-                catch (error) {
-                    const dataMsg = new PepDialogData({
-                        title: this.translate.instant('Events_DeleteFailedDialogTitle'),
-                        actionsType: 'close',
-                        content: this.translate.instant('Events_DeleteFailedDialogError')
-                    });
-                    this.dialogService.openDefaultDialog(dataMsg);
-                }
-            }
-        });
+            });
     }
 
     openCreateEventsForm() {
-        const groupedEvents = groupBy(this.events, (item)=>item.EventKey);
+        const groupedEvents = groupBy(this.events, (item) => item.EventKey);
         const formData: CreateFormData = {
             Events: this.hostObject.PossibleEvents,
             Fields: this.hostObject.PossibleFields,
@@ -194,10 +146,27 @@ export class EventsComponent implements OnInit {
             content: CreateEventComponent
         }
 
-        this.dialogService.openDialog(CreateEventComponent, formData, dialogConfig).afterClosed().subscribe((createdEvent)=> {
-            if(createdEvent) {
+        this.dialogService.openDialog(CreateEventComponent, formData, dialogConfig).afterClosed().subscribe((createdEvent) => {
+            if (createdEvent) {
                 this.navigateToEventForm(createdEvent.Key);
             }
         })
+    }
+
+    async saveEventLogic(logicBlocks) {
+        try {
+            this.chosenEvent.LogicBlocks = [...logicBlocks];
+            await this.eventsService.upsertEvent(this.chosenEvent);
+            this.updateEvents();
+            this.chosenEvent = null;
+        }
+        catch(error) {
+            console.log(`cannot update event. got error ${error}`);
+        }
+    }
+
+    showList() {
+        this.chosenEvent = null;
+        this.updateEvents();
     }
 }

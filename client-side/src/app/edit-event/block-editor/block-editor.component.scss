@@ -1,0 +1,20 @@
+@use '~@pepperi-addons/ngx-lib/src/core/style/abstracts/variables' as ngx-variables;
+@use '~@pepperi-addons/ngx-lib/src/core/style/abstracts/mixins' as ngx-mixins;
+@use '~@pepperi-addons/ngx-lib/src/core/style/abstracts/functions' as ngx-functions;
+
+.block-wrapper {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap:1rem;
+    padding: 0.5rem;
+    border-radius: ngx-variables.$border-radius-md;
+    align-items: center;
+    @include ngx-mixins.state-regular-default(true);
+    pep-textbox {
+        width: 38%;
+    }
+    pep-button {
+        width: 5%;
+    }
+}

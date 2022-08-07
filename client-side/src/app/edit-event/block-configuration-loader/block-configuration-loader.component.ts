@@ -1,22 +1,22 @@
 import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { PepDialogData } from '@pepperi-addons/ngx-lib/dialog';
+
 import { PepRemoteLoaderOptions } from '@pepperi-addons/ngx-lib/remote-loader';
+
 import { LogicBlock } from 'shared';
-import { EditorLoaderService } from '../services/editor-loader-service';
-import { LogicBlocksService } from '../services/logic-blocks-service';
+import { BlocksService } from '../../services/blocks-service';
+import { BlockConfigurationLoaderService } from '../../services/block-configuration-loader-service';
 
 @Component({
-  selector: 'app-logic-block-editor',
-  templateUrl: './logic-block-editor.component.html',
-  styleUrls: ['./logic-block-editor.component.scss']
+  selector: 'block-configuration-loader',
+  templateUrl: './block-configuration-loader.component.html',
+  styleUrls: ['./block-configuration-loader.component.scss']
 })
-export class LogicBlockEditorComponent implements OnInit {
+export class BlockConfigurationLoaderComponent implements OnInit {
   
   @ViewChild('dialogTemplate', { static: true, read: TemplateRef }) dialogTemplate!: TemplateRef<any>;
 
   remotePathOptions: PepRemoteLoaderOptions;
-  remotePathOptionsString: string = '';
 
   @Input() dialogRef: MatDialogRef<any>;
   @Input() hostObject: any;
@@ -24,14 +24,13 @@ export class LogicBlockEditorComponent implements OnInit {
   
   @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
  
-  constructor(private logicBlocksService: LogicBlocksService,
-    private editorLoaderService:EditorLoaderService) { }
+  constructor(private blocksService: BlocksService,
+    private editorLoaderService:BlockConfigurationLoaderService) { }
 
   ngOnInit(): void {
-    this.logicBlocksService.getLogicBlockRelation(this.logicBlock.Relation.Name, this.logicBlock.Relation.AddonUUID).then(async(relation) => {
+    this.blocksService.getLogicBlockRelation(this.logicBlock.Relation.Name, this.logicBlock.Relation.AddonUUID).then(async(relation) => {
       if (relation) {
         this.remotePathOptions = await this.editorLoaderService.getRemoteOptions(relation);
-        this.remotePathOptionsString = JSON.stringify(this.remotePathOptions);
       }
     });
   }
@@ -44,7 +43,6 @@ export class LogicBlockEditorComponent implements OnInit {
           break;
         }
         case 'set-configuration': {
-          console.log(`configuration obj got: ${event.configuration}`);
           this.dialogRef?.close();
           this.hostEvents.emit(event);
           break;
