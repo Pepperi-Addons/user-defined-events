@@ -9,7 +9,7 @@ import { EventsModule } from './events/events.module';
         EventsModule
     ],
     declarations: [
-        AppComponent,
+        AppComponent
     ],
     providers: [],
     bootstrap: [
