@@ -3,7 +3,7 @@ import  config  from '../addon.config.json';
 import { EventInterceptor, EventsInterceptorsScheme } from 'shared'
 
 export async function load(configuration: any) {
-    const events = ( await pepperi.api.adal.getList({
+    const events = (await pepperi.api.adal.getList({
         addon: config.AddonUUID,
         table: EventsInterceptorsScheme.Name
     })).objects as EventInterceptor[]

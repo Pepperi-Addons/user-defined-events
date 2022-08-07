@@ -1,7 +1,7 @@
 {
     "AddonUUID": "cbbc42ca-0f20-4ac8-b4c6-8f87ba7c16ad",
     "BaseURL": "http://localhost:8088",
-    "FileName": "addon-cpi.js",
+    "FileName": "events.js",
     "SessionToken": "{{Session_Token}}",
     "JWT": "{{Jwt_Token}}"
 }
