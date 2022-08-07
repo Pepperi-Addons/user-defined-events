@@ -44,9 +44,9 @@ export class BlockConfigurationLoaderService {
             remoteBasePath = this.devBlocks.get(relation.ModuleName);
         } else if (this.devBlocks.has(relation.ComponentName)) {
             remoteBasePath = this.devBlocks.get(relation.ComponentName);
-        } else {
-            return `${remoteBasePath}${relation.AddonRelativeURL}.js`;
         }
+        
+        return `${remoteBasePath}${relation.AddonRelativeURL}.js`;
     }
     
     async getRemoteOptions(relation: NgComponentRelation) {
