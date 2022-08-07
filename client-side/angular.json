@@ -4,12 +4,7 @@
     "projects": {
         "block": {
             "projectType": "application",
-            "schematics": {
-                "@schematics/angular:component": {
-                    "skipTests": true,
-                    "style": "scss"
-                }    
-            },
+            "schematics": { },
             "root": "./",
             "sourceRoot": "src",
             "prefix": "app",
