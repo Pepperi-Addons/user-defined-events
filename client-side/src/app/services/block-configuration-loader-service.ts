@@ -4,14 +4,14 @@ import { PepAddonService } from "@pepperi-addons/ngx-lib";
 import { IAddonBlockLoaderDialogOptions } from "@pepperi-addons/ngx-lib/remote-loader";
 import { NgComponentRelation } from "@pepperi-addons/papi-sdk";
 
-import { UtilitiesService } from "./utilitiles-service";
-import { LogicBlockEditorComponent } from '../logic-block-editor/logic-block-editor.component';
+import { UtilitiesService } from "./utilities-service";
+import { BlockConfigurationLoaderComponent } from '../edit-event/block-configuration-loader/block-configuration-loader.component';
 import { LogicBlockEditorOptions } from "src/entities";
 import { PepDialogService } from "@pepperi-addons/ngx-lib/dialog";
 import { MatDialogRef } from "@angular/material/dialog";
 
 @Injectable({providedIn:'root'})
-export class EditorLoaderService {
+export class BlockConfigurationLoaderService {
 
     private _devBlocks: Map<string, string>; // Map<Component name, Host name>
     get devBlocks(): Map<string, string> {
@@ -44,24 +44,25 @@ export class EditorLoaderService {
             remoteBasePath = this.devBlocks.get(relation.ModuleName);
         } else if (this.devBlocks.has(relation.ComponentName)) {
             remoteBasePath = this.devBlocks.get(relation.ComponentName);
-        } else {
-            return `${remoteBasePath}${relation.AddonRelativeURL}.js`;
         }
+        
+        return `${remoteBasePath}${relation.AddonRelativeURL}.js`;
     }
     
     async getRemoteOptions(relation: NgComponentRelation) {
+        const remoteEntry = await this.getRemoteEntry(relation);
         return {
             addonId: relation.AddonUUID,
-            remoteEntry: await this.getRemoteEntry(relation),
+            remoteEntry: remoteEntry,
             remoteName: relation.AddonRelativeURL,
             exposedModule: `./${relation.ModuleName}`,
             componentName: relation.ComponentName, 
         }
     }
 
-    private loadAddonBlockInternal(options: IAddonBlockLoaderDialogOptions): ComponentRef<LogicBlockEditorComponent> | null {
+    private loadAddonBlockInternal(options: IAddonBlockLoaderDialogOptions): ComponentRef<BlockConfigurationLoaderComponent> | null {
         if (options.container !== null) {
-            const factory = this.resolver.resolveComponentFactory(LogicBlockEditorComponent);
+            const factory = this.resolver.resolveComponentFactory(BlockConfigurationLoaderComponent);
             const componentRef = options.container.createComponent(factory);
             const logicBlockInstance = componentRef.instance;
 

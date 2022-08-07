@@ -1,0 +1,52 @@
+<pep-top-bar [title]="chosenEvent.EventField === '' ? 
+('EditEvent_PageTitle' | translate: {event_name: chosenEvent.EventKey}):
+('EditEvent_PageTitleWithField' | translate: {event_name: chosenEvent.EventKey, field_name: chosenEvent.EventField})">
+    <div header-start-content>
+        <!-- <pep-button class="pep-spacing-element" (buttonClick)="goBack()" [iconName]="'arrow_left_alt'"></pep-button> -->
+    </div>
+    <div header-end-content>
+        <pep-button class="pep-spacing-element" [value]="'Back_to_list' | translate" (buttonClick)="goBack()"></pep-button> 
+        <pep-button 
+            class="pep-spacing-element" 
+            [value]="'Update' | translate" 
+            [styleType]="'strong'" 
+            (buttonClick)="saveClicked()"
+        ></pep-button>
+    </div>
+</pep-top-bar>
+<div *ngIf="availableBlocks" class="mapped-fields-container">
+    <div class="available-fields-side-area">
+        <pep-draggable-items [items]="availableBlocks" [title]="'EditEvent_AvailableBlocks_Title' | translate" titleType="with-bottom-border" titleSizeType="md"
+            itemPlaceholderType="weak" [showSearch]="true" [dropAreaIds]="['emptyDropArea', 'mappedFields']" (itemDragStarted)="onDragStart($event)" (itemDragEnded)="onDragEnd($event)">
+        </pep-draggable-items>
+    </div>
+    <div pep-main-area class="mapped-fields-main-area">
+        <div class="mapped-fields-top-area pep-border-bottom" [title]="builderTitle">
+            <span class="title-md">{{ builderTitle }}&nbsp;</span>
+        </div>
+        
+        <div class="data-view-by-type-area">
+            <ng-container *ngIf="chosenEvent.LogicBlocks === undefined || chosenEvent.LogicBlocks.length === 0; then emptyTemplate; else notEmptyTemplate"></ng-container>
+            <ng-template #emptyTemplate>
+                <div id="emptyDropArea" class="drop-field-here-area" cdkDropList (cdkDropListDropped)="onDropBlock($event)">
+                    <mat-icon class="pep-spacing-element">
+                        <pep-icon name="arrow_down_alt"></pep-icon>
+                    </mat-icon>
+                    <span class="body-sm ellipsis">
+                        {{ 'EditEvent_EmptyDropPlace_Text' | translate }}
+                    </span> 
+                </div>
+            </ng-template>
+            <ng-template #notEmptyTemplate>
+                <div id="mappedFields" class="mapped-fields-area"
+                    cdkDropList [cdkDropListData]="chosenEvent.LogicBlocks" (cdkDropListDropped)="onDropBlock($event)">
+                    <ng-container *ngFor="let block of chosenEvent.LogicBlocks; let i = index" >
+                        <div class="logic-blocks-container" cdkDrag (cdkDragStarted)="onDragStart($event)" (cdkDragEnded)="onDragEnd($event)">
+                            <block-editor [block]="block" (deleteBlockClicked)="onDeleteBlock($event)" (editBlockClicked)="openBlockConfiguration($event)"></block-editor>
+                        </div>
+                    </ng-container>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+</div>

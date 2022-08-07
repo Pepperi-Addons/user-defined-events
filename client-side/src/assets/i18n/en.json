@@ -12,5 +12,13 @@
     "AddDialog_CancelButton": "Back to list",
     "AddDialog_UpdateButton": "Update",
     "AddDialog_Failure_Title": "Creation failed",
-    "AddDialog_Failure_Content": "Failed to create event. please try again later."
+    "AddDialog_Failure_Content": "Failed to create event. please try again later.",
+    "EditEvent_AvailableBlocks_Title": "Logic Blocks",
+    "EditEvent_EmptyDropPlace_Text": "Drag logic block here",
+    "EditEvent_ChosenBlock_Name": "Name",
+    "EditEvent_ChosenBlock_Disabled": "Disabled",
+    "EditEvent_ChosenBlock_GroupIndex": "Parallel execution group",
+    "EditEvent_PageTitle":"Edit event {{event_name}}",
+    "EditEvent_PageTitleWithField":"Edit event {{event_name}} of {{field_name}}",
+    "Back_to_list": "Back to list"
 }

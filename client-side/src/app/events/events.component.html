@@ -1,20 +1,7 @@
-<pep-generic-list #eventsList class="generic-list"
-    [title] = "'Events_List_Title' | translate"
-    [showTopBar]="true" 
-    [dataSource]="dataSource" 
-    [inline]="false"
-    [actions]="actions"
-    [addPadding]="false"
-    [showSearch]="false"
-    [uuidMapping]="'Key'"
-    >
-    <ng-container right-buttons>
-        <pep-button 
-            class="pep-spacing-element"
-            [sizeType]="'md'" 
-            [value]="'Add' | translate"
-            [styleType]="'strong'" 
-            (buttonClick)="openCreateEventsForm()"
-        ></pep-button>
-    </ng-container>
-</pep-generic-list>
+<events-list *ngIf="events && !chosenEvent" [events]="events" (listActionClicked)="onActionClicked($event)"></events-list>
+<edit-event *ngIf="chosenEvent" 
+    [chosenEvent]="chosenEvent"
+    [availableBlocks]="availableBlocks"
+    (eventLogicSaved)="saveEventLogic($event)"
+    (backToList)="showList()"
+></edit-event>
