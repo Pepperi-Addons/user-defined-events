@@ -93,7 +93,7 @@ export class EditEventComponent implements OnInit {
           name: '',
           hostObject: JSON.parse(block.Configuration),
           hostEventsCallback: (event) => {
-              if(event.type === 'get-configuration') {
+              if(event.type === 'set-configuration') {
                 block.Configuration = JSON.stringify(event.configuration);
                 if(shouldAdd) {
                   this.spliceLogicBlocks(index, 0, block);

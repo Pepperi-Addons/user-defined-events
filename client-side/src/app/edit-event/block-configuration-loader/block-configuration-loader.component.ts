@@ -42,8 +42,7 @@ export class BlockConfigurationLoaderComponent implements OnInit {
           this.dialogRef?.close();
           break;
         }
-        case 'get-configuration': {
-          console.log(`configuration obj got: ${event.configuration}`);
+        case 'set-configuration': {
           this.dialogRef?.close();
           this.hostEvents.emit(event);
           break;
