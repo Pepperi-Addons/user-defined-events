@@ -17,7 +17,6 @@ export async function load(configuration: any) {
             const sorted = new Map([...groups.entries()].sort((a,b) => {
                 return a[0] - b[0];
             }))
-            debugger;
             console.log(`inside ${event.EventKey} event. \n after group by. groups: ${JSON.stringify(sorted.entries())}`);
             for await (const groupKey of sorted.keys()) {
                 const blocksToRun = sorted.get(groupKey)?.filter(val => !val.Disabled);
