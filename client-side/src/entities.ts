@@ -12,7 +12,9 @@ export interface HostEvent {
 
 export interface EventData {
     EventKey: string;
-    EventFilter: string;
+    EventFilter: {
+        [key:string]: any;
+    };
     SupportField: boolean;
 }
 

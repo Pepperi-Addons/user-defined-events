@@ -44,7 +44,8 @@ export class EditEventComponent implements OnInit {
       ParallelExecutionGroup: NaN,
       Relation: {
         AddonUUID: draggableItem.data.addonUUID,
-        Name: draggableItem.title
+        Name: draggableItem.title,
+        BlockExecutionRelativeURL: draggableItem.data.blockExecutionRelativeURL,
       }
     }
 
