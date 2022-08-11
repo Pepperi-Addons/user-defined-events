@@ -86,7 +86,7 @@ export class CreateEventComponent implements OnInit {
     this.eventsService.upsertEvent({
       EventKey: this.eventKey,
       EventField: this.eventSupportsField ? this.eventField : '',
-      EventFilter: chosenEvent?.EventFilter || '',
+      EventFilter: chosenEvent?.EventFilter || {},
       LogicBlocks: [],
       AddonUUID: this.incoming.AddonUUID,
       Group: this.incoming.Group
