@@ -6,12 +6,10 @@ export async function load(configuration: any) {
     const events = (await pepperi.api.adal.getList({
         addon: config.AddonUUID,
         table: EventsInterceptorsScheme.Name
-    })).objects as EventInterceptor[]
-    console.log(`events registered: ${JSON.stringify(events)}`);
+    })).objects as EventInterceptor[];
 
-    events.map(event => {
+    events.forEach(event => {
         const filter = event.EventField ? { FieldID: event.EventField, ...event.EventFilter } : event.EventFilter;
-        console.log(`about to register ${event.EventKey} interceptor with the following filter ${filter}`);
         pepperi.events.intercept(event.EventKey as any, filter, async (data, next, main) => {
             const groups: Map<number,LogicBlock[]> = groupBy(event.LogicBlocks, x => !!Number(x.ParallelExecutionGroup) ? Number(x.ParallelExecutionGroup): Number.MAX_VALUE);
             const sorted = new Map([...groups.entries()].sort((a,b) => {
