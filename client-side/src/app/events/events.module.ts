@@ -26,7 +26,6 @@ import { EventsComponent } from './index';
 import { CreateEventComponent } from '../create-event/create-event.component'
 import { EventsListComponent } from '../events-list/events-list.component'
 import { EditEventComponent } from '../edit-event/edit-event.component'
-import { BlockConfigurationLoaderComponent } from '../edit-event/block-configuration-loader/block-configuration-loader.component'
 import { BlockEditorComponent } from '../edit-event/block-editor/block-editor.component';
 
 import { BlockConfigurationLoaderService } from '../services/block-configuration-loader-service'
@@ -48,7 +47,6 @@ export const routes: Routes = [
     declarations: [
         EventsComponent,
         CreateEventComponent,
-        BlockConfigurationLoaderComponent,
         EditEventComponent,
         EventsListComponent,
         BlockEditorComponent,

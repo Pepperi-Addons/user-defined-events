@@ -2,6 +2,7 @@ import { CdkDragDrop, CdkDragEnd, CdkDragStart, moveItemInArray } from '@angular
 import { Component, EventEmitter, Input, OnInit, Output, ViewContainerRef } from '@angular/core';
 import { IPepButtonClickEvent } from '@pepperi-addons/ngx-lib/button';
 import { IPepDraggableItem } from '@pepperi-addons/ngx-lib/draggable-items';
+import { PepAddonBlockLoaderService } from '@pepperi-addons/ngx-lib/remote-loader';
 import { EventInterceptor, LogicBlock } from 'shared';
 import { LogicBlockRelation } from 'src/entities';
 import { BlockConfigurationLoaderService } from '../services/block-configuration-loader-service';
@@ -27,7 +28,9 @@ export class EditEventComponent implements OnInit {
   constructor(
     private utilitiesService: UtilitiesService,
     private viewContainer: ViewContainerRef,
-    private editorLoaderService: BlockConfigurationLoaderService
+    private editorLoaderService: BlockConfigurationLoaderService,
+    private addonBlockLoaderService: PepAddonBlockLoaderService,
+    private blocksService: BlocksService,
   ) { }
 
   ngOnInit(): void {
@@ -48,8 +51,7 @@ export class EditEventComponent implements OnInit {
         BlockExecutionRelativeURL: draggableItem.data.blockExecutionRelativeURL,
       }
     }
-
-    this.openBlockConfiguration(block, true, index);
+    this.openBlockConfiguration(block, true, index);    
   }
 
   private spliceLogicBlocks(start: number, deleteCount: number, item?: LogicBlock) {
@@ -88,27 +90,38 @@ export class EditEventComponent implements OnInit {
   }
 
   openBlockConfiguration(block: LogicBlock, shouldAdd = false, index = 0) {
-    this.editorLoaderService.loadAddonBlockInDialog({
-          block: block,
+    this.blocksService.getLogicBlockRelation(block.Relation.Name, block.Relation.AddonUUID).then(async(relation) => {
+      if (relation) {
+        const remoteEntry = await this.editorLoaderService.getRemoteEntry(relation);
+        const dialogRef = this.addonBlockLoaderService.loadAddonBlockInDialog({
           container: this.viewContainer,
-          name: '',
+          name: block.Relation.Name,
+          blockType: "LogicBlock",
+          addonUUID: block.Relation.AddonUUID,
+          blockRemoteEntry: remoteEntry,
           hostObject: JSON.parse(block.Configuration),
           hostEventsCallback: (event) => {
-              if(event.type === 'set-configuration') {
-                block.Configuration = JSON.stringify(event.configuration);
-                if(shouldAdd) {
-                  this.spliceLogicBlocks(index, 0, block);
+            if(event) {
+              switch(event.type) {
+                case 'close-dialog': {
+                  dialogRef?.close();
+                  break;
+                }
+                case 'set-configuration': {
+                  dialogRef?.close();
+                  block.Configuration = JSON.stringify(event.configuration);
+                  if(shouldAdd) {
+                    this.spliceLogicBlocks(index, 0, block);
+                  }
+                  break;
                 }
               }
+            }
           },
-          size: 'large',
-          data: {
-              showClose: true,
-              showFooter: false,
-              showHeader: true,
-              title: 'Editor Configuration Dialog'
-          }
-      })
+          size:'large'
+        })
+      }
+    });
   }
 
   goBack() {
