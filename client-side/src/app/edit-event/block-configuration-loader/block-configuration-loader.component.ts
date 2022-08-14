@@ -35,7 +35,7 @@ export class BlockConfigurationLoaderComponent implements OnInit {
     });
   }
 
-  onHostEvents(event) {
+  onHostEventsCallback(event) {
     if(event) {
       switch(event.type) {
         case 'close-dialog': {
@@ -53,6 +53,10 @@ export class BlockConfigurationLoaderComponent implements OnInit {
 
   onBlockLoad() {
     console.log('editor load finished');
+  }
+
+  closeDialog($event) {
+    this.dialogRef.close($event);
   }
 
 }

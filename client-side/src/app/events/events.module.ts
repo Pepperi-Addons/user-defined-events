@@ -2,7 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 
 import { TranslateLoader, TranslateModule, TranslateService, TranslateStore } from '@ngx-translate/core';
 
@@ -14,6 +16,7 @@ import { PepRemoteLoaderModule } from '@pepperi-addons/ngx-lib/remote-loader';
 import { PepTopBarModule } from '@pepperi-addons/ngx-lib/top-bar';
 import { PepDraggableItemsModule } from '@pepperi-addons/ngx-lib/draggable-items';
 import { PepCheckboxModule } from '@pepperi-addons/ngx-lib/checkbox';
+import { PepIconModule } from '@pepperi-addons/ngx-lib/icon';
 
 import { PepGenericListModule } from '@pepperi-addons/ngx-composite-lib/generic-list';
 
@@ -51,6 +54,7 @@ export const routes: Routes = [
         BlockEditorComponent,
     ],
     imports: [
+        BrowserAnimationsModule,
         CommonModule,
         PepGenericListModule,
         PepButtonModule,
@@ -61,13 +65,15 @@ export const routes: Routes = [
         PepDraggableItemsModule,
         PepCheckboxModule,
         PepTextboxModule,
+        PepIconModule,
+        MatIconModule,
         MatDialogModule,
         DragDropModule,
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,
                 useFactory: (addonService: PepAddonService) =>
-                    PepAddonService.createMultiTranslateLoader(addonService, ['ngx-lib', 'ngx-composite-lib'], config.AddonUUID),
+                    PepAddonService.createMultiTranslateLoader(config.AddonUUID, addonService, ['ngx-lib', 'ngx-composite-lib']),
                 deps: [PepAddonService]
             }, isolate: false
         }),

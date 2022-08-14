@@ -43,8 +43,9 @@ export class EventsComponent implements OnInit {
                 title: relation.Name,
                 disabled: false,
                 data: {
-                  addonUUID: relation.AddonUUID,
-                  blockExecutionRelativeURL: relation.BlockExecutionRelativeURL
+                    key: relation.AddonUUID,
+                    addonUUID: relation.AddonUUID,
+                    blockExecutionRelativeURL: relation.BlockExecutionRelativeURL
                 }
               }
             })

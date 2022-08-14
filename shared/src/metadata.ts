@@ -2,7 +2,7 @@ import { AddonDataScheme, Relation } from "@pepperi-addons/papi-sdk";
 import config from '../../addon.config.json';
 
 const blockName = 'Events';
-const fileName = `file_${config.AddonUUID.replace(/-/g, '_').toLowerCase()}`;
+const fileName = `file_${config.AddonUUID}`;
 
 export const EventsInterceptorsScheme : AddonDataScheme = {
     Name: 'event_interceptors',
@@ -66,9 +66,11 @@ export const EventsAddonBlockRelation: Relation = {
     Name: blockName,
     Description: `${blockName} addon block`,
     Type: "NgComponent",
-    SubType: "NG11",
+    SubType: "NG14",
     AddonUUID: config.AddonUUID,
     AddonRelativeURL: fileName,
     ComponentName: `${blockName}Component`,
-    ModuleName: `${blockName}Module`
+    ModuleName: `${blockName}Module`,
+    ElementsModule: 'WebComponents',
+    ElementName: `events-element-${config.AddonUUID}`
 }

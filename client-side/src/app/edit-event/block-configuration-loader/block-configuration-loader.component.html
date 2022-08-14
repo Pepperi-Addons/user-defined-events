@@ -1,12 +1,12 @@
 <ng-template #dialogTemplate let-data>
     <pep-dialog [showClose]="data?.showClose" [showHeader]="data?.showHeader" [showFooter]="data?.showFooter" [title]="data?.title" (close)="closeDialog($event)">
         <ng-container pep-dialog-content>
-            <pep-remote-loader *ngIf="remotePathOptions"
+            <pep-remote-loader-element *ngIf="remotePathOptions"
                 [options]="remotePathOptions"
-                [hostObject]="hostObject"
-                (hostEvents)="onHostEvents($event);"
+                [props]="{ hostObject: hostObject }"
+                [events]="{ hostEvents: onHostEventsCallback }"
                 (load)="onBlockLoad()">
-            </pep-remote-loader>
+            </pep-remote-loader-element>
         </ng-container>
     </pep-dialog>
 </ng-template>

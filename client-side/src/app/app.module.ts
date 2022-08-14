@@ -1,19 +1,44 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, Component, DoBootstrap, Injector } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+import { PepAddonService } from '@pepperi-addons/ngx-lib'
+
 import { AppComponent } from './app.component';
-import { EventsModule } from './events/events.module';
+import { EventsModule, EventsComponent } from './events';
+
+import { config } from './addon.config'
+
+@Component({
+    selector: 'app-empty-route',
+    template: '<div>Route is not exist.</div>',
+})
+export class EmptyRouteComponent {}
+
+const routes: Routes = [
+    { path: '**', component: EmptyRouteComponent }
+];
 
 @NgModule({
     imports: [
         BrowserModule,
-        EventsModule
+        EventsModule,
+        RouterModule.forRoot(routes),
     ],
     declarations: [
         AppComponent
     ],
     providers: [],
     bootstrap: [
-        AppComponent
+        //AppComponent
     ]
 })
-export class AppModule { }
+export class AppModule implements DoBootstrap {
+    
+    constructor(private pepAddonService: PepAddonService,
+        private injector: Injector) {}
+
+    ngDoBootstrap(): void {
+        this.pepAddonService.defineCustomElement(`events-element-${config.AddonUUID}`, EventsComponent, this.injector)      
+    }
+}
