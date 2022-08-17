@@ -65,7 +65,8 @@ export class EventsComponent implements OnInit {
                 break;
             }
             case 'Edit': {
-                this.navigateToEventForm(data.ItemKey);
+                // this.navigateToEventForm(data.ItemKey);
+                this.chosenEvent = this.events.find(event => event.Key === data.ItemKey);
                 break;
             }
             case 'Delete': {
@@ -76,35 +77,7 @@ export class EventsComponent implements OnInit {
     }
 
     navigateToEventForm(itemKey: string) {
-        console.log(`edit event clicked. chosen event: ${itemKey}`);
         this.chosenEvent = this.events.find(event => event.Key === itemKey);
-        // this.editorLoaderService.loadAddonBlockInDialog({
-        //     block: {
-        //         Relation: {
-        //             Name: 'ExampleBlock',
-        //             AddonUUID: 'bd822717-76bc-480c-8f71-7f38b1bab0cb'
-        //         },
-        //         Disabled: false,
-        //         ParallelExecutionGroup: 1,
-        //         Name: 'Testing',
-        //         Configuration: ""
-        //     },
-        //     container: this.viewContainer,
-        //     name: '',
-        //     hostObject: {
-        //         slug: 'accounts',
-        //     },
-        //     hostEventsCallback: (event) => {
-        //         console.log(`event caught: ${JSON.stringify(event)}`);
-        //     },
-        //     size: 'large',
-        //     data: {
-        //         showClose: true,
-        //         showFooter: false,
-        //         showHeader: true,
-        //         title: 'Editor Configuration Dialog'
-        //     }
-        // })
     }
 
     showDeleteDialog(objID: string) {
@@ -138,9 +111,8 @@ export class EventsComponent implements OnInit {
         const groupedEvents = groupBy(this.events, (item) => item.EventKey);
         const formData: CreateFormData = {
             Events: this.hostObject.PossibleEvents,
-            Fields: this.hostObject.PossibleFields,
             AddonUUID: this.hostObject.AddonUUID,
-            Group: this.hostObject.Group,
+            Name: this.hostObject.Name,
             CurrentEvents: groupedEvents,
         }
         const dialogConfig = this.dialogService.getDialogConfig({}, 'regular');
@@ -150,7 +122,8 @@ export class EventsComponent implements OnInit {
 
         this.dialogService.openDialog(CreateEventComponent, formData, dialogConfig).afterClosed().subscribe((createdEvent) => {
             if (createdEvent) {
-                this.navigateToEventForm(createdEvent.Key);
+                //this.navigateToEventForm(createdEvent.Key);
+                this.chosenEvent = {...createdEvent};
             }
         })
     }

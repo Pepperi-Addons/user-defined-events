@@ -47,7 +47,7 @@ export class EventsListComponent implements OnInit, OnChanges {
                         Title: '',
                         Fields: [
                             {
-                                FieldID: 'EventKey',
+                                FieldID: 'EventTitle',
                                 Type: 'TextBox',
                                 Title: this.translate.instant('Name'),
                                 Mandatory: false,

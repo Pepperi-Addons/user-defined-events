@@ -2,7 +2,8 @@ import { AddonData } from "@pepperi-addons/papi-sdk";
 
 export interface EventInterceptor extends AddonData {
     AddonUUID: string;
-    Group: string;
+    Name: string;
+    EventTitle: string;
     EventKey: string;
     EventFilter: {
         [key: string]: any;

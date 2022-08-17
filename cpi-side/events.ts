@@ -7,7 +7,8 @@ export async function load(configuration: any) {
         addon: config.AddonUUID,
         table: EventsInterceptorsScheme.Name
     })).objects as EventInterceptor[];
-
+ 
+    console.log(`after getting events, received: ${JSON.stringify(events)}`);
     events.forEach(event => {
         const filter = event.EventField ? { FieldID: event.EventField, ...event.EventFilter } : event.EventFilter;
         pepperi.events.intercept(event.EventKey as any, filter, async (data, next, main) => {
@@ -42,6 +43,7 @@ async function handleGroupBlocks(blocks?: LogicBlock[], eventData?: any, paralle
 }
 
 async function runSingleBlock(block: LogicBlock, data) {
+    debugger;
     return pepperi.addon.api.uuid(block.Relation.AddonUUID).post(block.Relation.BlockExecutionRelativeURL, block.Configuration, data?.client)
     
 }

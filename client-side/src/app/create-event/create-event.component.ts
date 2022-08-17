@@ -18,6 +18,7 @@ export class CreateEventComponent implements OnInit {
   possibleFields: SelectOptions<string> = [];
   eventSupportsField: boolean = true;
   eventKey: string = '';
+  eventTitle: string = '';
   eventField: string = '';
   isValid: boolean = false;
 
@@ -30,19 +31,12 @@ export class CreateEventComponent implements OnInit {
   ) {
 
     if (incoming.Events.length > 0) {
-      this.possibleEvents = incoming.Events.filter(event => incoming.CurrentEvents.get(event.EventKey) === undefined || event.SupportField).map(event => {
+      this.possibleEvents = incoming.Events.filter(event => incoming.CurrentEvents.get(event.EventKey) === undefined || event.Fields?.length > 0).map(event => {
         return {
           key: event.EventKey,
           value: event.EventKey
         }
       });
-
-      this.possibleFields = incoming.Fields.map(field => {
-        return {
-          key: field,
-          value: field
-        }
-      })
     }
   }
 
@@ -52,15 +46,16 @@ export class CreateEventComponent implements OnInit {
   eventKeyChanged(value) {
     const event = this.incoming.Events.find(event => event.EventKey === value);
     if (event) {
-        this.eventSupportsField = event.SupportField;
+        this.eventSupportsField = event.Fields?.length > 0 || false;
         this.isValid = !this.eventSupportsField;
+        this.eventTitle = event.Title;
         // if the event support field, we need to filter out the fields already defined for this event
-        if (event.SupportField) {
+        if (event.Fields?.length > 0) {
           this.eventField = '';
-          this.possibleFields = this.incoming.Fields.filter(field => {
+          this.possibleFields = event.Fields.filter(field => {
             const events = this.incoming.CurrentEvents.get(event.EventKey);
             if (events) {
-              if (events.find(item => item.EventField === field)) {
+              if (events.find(item => item.EventField === field.ApiName)) {
                 return false;
               }
               else {
@@ -70,8 +65,8 @@ export class CreateEventComponent implements OnInit {
             return true;
           }).map(field => {
             return {
-              key: field,
-              value: field
+              key: field.ApiName,
+              value: field.Title
             }
           })
         }
@@ -84,12 +79,13 @@ export class CreateEventComponent implements OnInit {
   createEvent() {
     const chosenEvent = this.incoming.Events.find(item => item.EventKey === this.eventKey);
     this.eventsService.upsertEvent({
+      EventTitle: this.eventTitle,
       EventKey: this.eventKey,
       EventField: this.eventSupportsField ? this.eventField : '',
       EventFilter: chosenEvent?.EventFilter || {},
       LogicBlocks: [],
       AddonUUID: this.incoming.AddonUUID,
-      Group: this.incoming.Group
+      Name: this.incoming.Name
     }).then((event => {
       this.dialogRef.close(event);
     })).catch(error => {

@@ -5,24 +5,26 @@ import { EventInterceptor, LogicBlock } from "shared";
 
 export interface HostEvent {
     PossibleEvents: EventData[];
-    PossibleFields: string[];
     AddonUUID: string;
-    Group: string;
+    Name: string;
 }
 
 export interface EventData {
+    Title: string;
     EventKey: string;
     EventFilter: {
         [key:string]: any;
     };
-    SupportField: boolean;
+    Fields: [{
+        ApiName: string;
+        Title: string;
+    }];
 }
 
 export interface CreateFormData {
     Events: EventData[];
-    Fields: string[];
     AddonUUID: string;
-    Group: string;
+    Name: string;
     CurrentEvents: Map<string, EventInterceptor[]>
 }
 

@@ -15,8 +15,11 @@ export const EventsInterceptorsScheme : AddonDataScheme = {
         AddonUUID: {
             Type: 'String',
         },
-        Group: {
+        Name: {
             Type: 'String'
+        },
+        EventTitle: {
+            Type: 'String',            
         },
         EventKey: {
             Type: 'String',            
