@@ -99,7 +99,7 @@ export class EditEventComponent implements OnInit {
           blockType: "LogicBlock",
           addonUUID: block.Relation.AddonUUID,
           blockRemoteEntry: remoteEntry,
-          hostObject: JSON.parse(block.Configuration),
+          hostObject: block.Configuration,
           hostEventsCallback: (event) => {
             if(event) {
               switch(event.type) {
@@ -109,7 +109,7 @@ export class EditEventComponent implements OnInit {
                 }
                 case 'set-configuration': {
                   dialogRef?.close();
-                  block.Configuration = JSON.stringify(event.configuration);
+                  block.Configuration = event.configuration;
                   if(shouldAdd) {
                     this.spliceLogicBlocks(index, 0, block);
                   }
