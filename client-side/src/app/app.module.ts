@@ -5,7 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { PepAddonService } from '@pepperi-addons/ngx-lib'
 
 import { AppComponent } from './app.component';
-import { EventsModule, EventsComponent } from './events';
+import { UserEventsModule, UserEventsComponent } from './user-events';
 
 import { config } from './addon.config'
 
@@ -22,7 +22,7 @@ const routes: Routes = [
 @NgModule({
     imports: [
         BrowserModule,
-        EventsModule,
+        UserEventsModule,
         RouterModule.forRoot(routes),
     ],
     declarations: [
@@ -39,6 +39,6 @@ export class AppModule implements DoBootstrap {
         private injector: Injector) {}
 
     ngDoBootstrap(): void {
-        this.pepAddonService.defineCustomElement(`events-element-${config.AddonUUID}`, EventsComponent, this.injector)      
+        this.pepAddonService.defineCustomElement(`user-events-element-${config.AddonUUID}`, UserEventsComponent, this.injector)      
     }
 }
