@@ -1,6 +1,6 @@
 import '@pepperi-addons/cpi-node'
 import  config  from '../addon.config.json';
-import { EventInterceptor, EventsInterceptorsScheme, groupBy, LogicBlock } from 'shared'
+import { EventInterceptor, EventsInterceptorsScheme, groupBy, LogicBlock } from 'shared';
 
 export async function load(configuration: any) {
     const events = (await pepperi.api.adal.getList({
@@ -43,7 +43,9 @@ async function handleGroupBlocks(blocks?: LogicBlock[], eventData?: any, paralle
 }
 
 async function runSingleBlock(block: LogicBlock, data) {
-    debugger;
-    return pepperi.addon.api.uuid(block.Relation.AddonUUID).post(block.Relation.BlockExecutionRelativeURL, block.Configuration, data?.client)
-    
+    return pepperi.addons.api.uuid(block.Relation.AddonUUID).post({
+        url: block.Relation.BlockExecutionRelativeURL,
+        body: block.Configuration,
+        client:data?.client,
+    })    
 }
