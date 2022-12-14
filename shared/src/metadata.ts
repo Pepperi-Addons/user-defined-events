@@ -1,7 +1,7 @@
 import { AddonDataScheme, Relation } from "@pepperi-addons/papi-sdk";
 import config from '../../addon.config.json';
 
-const blockName = 'Events';
+const blockName = 'UserDefinedEvents';
 const fileName = `file_${config.AddonUUID}`;
 
 export const EventsInterceptorsScheme : AddonDataScheme = {
@@ -75,5 +75,5 @@ export const EventsAddonBlockRelation: Relation = {
     ComponentName: `${blockName}Component`,
     ModuleName: `${blockName}Module`,
     ElementsModule: 'WebComponents',
-    ElementName: `events-element-${config.AddonUUID}`
+    ElementName: `user-defined-events-element-${config.AddonUUID}`
 }

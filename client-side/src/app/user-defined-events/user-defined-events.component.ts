@@ -15,11 +15,11 @@ import { BlocksService } from '../services/blocks-service';
 import { IPepDraggableItem } from '@pepperi-addons/ngx-lib/draggable-items';
 
 @Component({
-    selector: 'events',
-    templateUrl: './events.component.html',
-    styleUrls: ['./events.component.scss']
+    selector: 'user-defined-events',
+    templateUrl: './user-defined-events.component.html',
+    styleUrls: ['./user-defined-events.component.scss']
 })
-export class EventsComponent implements OnInit {
+export class UserDefinedEventsComponent implements OnInit {
     @Input() hostObject: HostEvent;
 
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
