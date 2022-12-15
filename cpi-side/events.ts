@@ -46,6 +46,6 @@ async function runSingleBlock(block: LogicBlock, data) {
     return pepperi.addons.api.uuid(block.Relation.AddonUUID).post({
         url: block.Relation.BlockExecutionRelativeURL,
         body: block.Configuration,
-        client:data?.client,
+        context: data
     })    
 }
