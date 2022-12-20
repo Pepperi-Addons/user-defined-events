@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewContainerRef } from
 import { IPepButtonClickEvent } from '@pepperi-addons/ngx-lib/button';
 import { IPepDraggableItem } from '@pepperi-addons/ngx-lib/draggable-items';
 import { PepAddonBlockLoaderService } from '@pepperi-addons/ngx-lib/remote-loader';
-import { EventInterceptor, LogicBlock } from 'shared';
+import { EventInterceptor, LogicBlock, EventDataFields } from 'shared';
 import { LogicBlockRelation } from 'src/entities';
 import { BlockConfigurationLoaderService } from '../services/block-configuration-loader-service';
 import { BlocksService } from '../services/blocks-service';
@@ -18,6 +18,7 @@ export class EditEventComponent implements OnInit {
 
   @Input() chosenEvent: EventInterceptor;
   @Input() availableBlocks: Array<IPepDraggableItem> = [];
+  @Input() eventData: EventDataFields;
 
   @Output() eventLogicSaved: EventEmitter<Array<LogicBlock>> = new EventEmitter<Array<LogicBlock>>();
   @Output() backToList: EventEmitter<void> = new EventEmitter<void>()
@@ -99,7 +100,10 @@ export class EditEventComponent implements OnInit {
           blockType: "LogicBlock",
           addonUUID: block.Relation.AddonUUID,
           blockRemoteEntry: remoteEntry,
-          hostObject: block.Configuration,
+          hostObject: {
+            Configuration: block.Configuration,
+            EventData: this.eventData,
+          },
           hostEventsCallback: (event) => {
             if(event) {
               switch(event.type) {

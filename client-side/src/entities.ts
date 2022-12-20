@@ -1,15 +1,15 @@
 import { NgComponentRelation } from "@pepperi-addons/papi-sdk";
 import { IAddonBlockLoaderDialogOptions } from "@pepperi-addons/ngx-lib/remote-loader";
 
-import { EventInterceptor, LogicBlock } from "shared";
+import { EventInterceptor, LogicBlock, EventDataFields} from "shared";
 
 export interface HostEvent {
-    PossibleEvents: EventData[];
+    PossibleEvents: UserEvent[];
     AddonUUID: string;
     Name: string;
 }
 
-export interface EventData {
+export interface UserEvent {
     Title: string;
     EventKey: string;
     EventFilter: {
@@ -19,10 +19,11 @@ export interface EventData {
         ApiName: string;
         Title: string;
     }];
+    EventData: EventDataFields;
 }
 
 export interface CreateFormData {
-    Events: EventData[];
+    Events: UserEvent[];
     AddonUUID: string;
     Name: string;
     CurrentEvents: Map<string, EventInterceptor[]>
