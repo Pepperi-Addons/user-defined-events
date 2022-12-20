@@ -13,7 +13,7 @@ export class EventsService {
     ) { }
 
     async getEvents(addonUUID: string, name: string): Promise<EventInterceptor[]> {
-        return this.addonService.getAddonApiCall(config.AddonUUID, 'api', `event_interceptor?where='AddonUUID=${addonUUID}' And 'Name=${name}'`).toPromise();
+        return this.addonService.getAddonApiCall(config.AddonUUID, 'api', `event_interceptor?where=AddonUUID="${addonUUID}" And Name="${name}"`).toPromise();
     }
     
     async upsertEvent(obj: EventInterceptor): Promise<EventInterceptor> {
