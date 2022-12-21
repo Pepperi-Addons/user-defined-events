@@ -45,7 +45,7 @@ async function handleGroupBlocks(blocks?: LogicBlock[], eventData?: any, paralle
         else {
             for (const block of blocks) {
                 const value = await runSingleBlock(block, eventData);
-                result[block.Name] = value;
+                result = {...result, ...value}
             }
         }
     }
