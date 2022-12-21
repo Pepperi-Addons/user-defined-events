@@ -12,7 +12,7 @@
     align-items: center;
     @include ngx-mixins.state-regular-default(true);
     pep-textbox {
-        width: 38%;
+        width: 65%;
     }
     pep-button {
         width: 5%;
