@@ -46,7 +46,9 @@ export class UserDefinedEventsComponent implements OnInit {
                 data: {
                     key: relation.AddonUUID,
                     addonUUID: relation.AddonUUID,
-                    blockExecutionRelativeURL: relation.BlockExecutionRelativeURL
+                    blockExecutionRelativeURL: relation.BlockExecutionRelativeURL,
+                    moduleName: relation.ModuleName,
+                    componentName: relation.ComponentName,
                 }
               }
             })
