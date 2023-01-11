@@ -17,6 +17,8 @@ export interface LogicBlock {
         AddonUUID: string;
         Name: string;
         BlockExecutionRelativeURL: string;
+        ModuleName: string;
+        ComponentName: string;
     };
     Name: string;
     Configuration: any;
