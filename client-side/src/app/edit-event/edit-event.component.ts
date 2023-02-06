@@ -121,8 +121,7 @@ export class EditEventComponent implements OnInit {
               }
             }
           }
-        },
-        size:'large'
+        }
       })
   }
 
