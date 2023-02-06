@@ -14,10 +14,8 @@ export class EventsService {
     }
     
     async upsert(obj: EventInterceptor): Promise<EventInterceptor> {
-        obj.Key = `${obj.AddonUUID}_${obj.Group}_${obj.EventKey}`;
-        // field events are not unique, we need to add the field to make it unique
-        if (obj.EventField) { 
-            obj.Key = `${obj.Key}_${obj.EventField}`;
+        if(!obj.Key) {
+            obj.Key = this.getObjectKey(obj);
         }
         return await this.utilitiesService.papiClient.addons.data.uuid(this.client.AddonUUID).table(EventsInterceptorsScheme.Name).upsert(obj) as EventInterceptor;
     }
@@ -60,5 +58,35 @@ export class EventsService {
             const clause = `${fieldID}='${current}'`;
             return index == 1 ? `${fieldID}='${previous}' OR ${clause}` : `${previous} OR ${clause}`;
         });
+    }
+
+    async migrateInterceptors() {
+        const interceptors = await this.find({});
+        try {
+            // iterate over all interceptors in the table, are change the key for the object
+            for await (const interceptor of interceptors) {
+                interceptor.Hidden = true;
+                // delete the old interceptor
+                await this.upsert(interceptor);
+
+                // delete the Key so the upsert will build the key again
+                delete interceptor.Key;
+                interceptor.Hidden = false;
+                await this.upsert(interceptor);
+            }
+        }
+        catch (err) {
+            console.error('could not migrate interceptors. got error', err);
+            throw err;
+        }
+    }
+
+    getObjectKey(obj: EventInterceptor) {
+        let key = `${obj.AddonUUID}_${obj.Name}_${obj.EventKey}`;
+        // field events are not unique, we need to add the field to make it unique
+        if (obj.EventField) { 
+            key = `${key}_${obj.EventField}`;
+        }
+        return key;
     }
 }
