@@ -1,21 +1,22 @@
 import { Injectable } from "@angular/core";
 
+import { PepAddonService } from "@pepperi-addons/ngx-lib";
+
 import { config } from '../addon.config'
 import { EventInterceptor } from 'shared';
-import { UtilitiesService } from './utilities-service';
 
 @Injectable({providedIn:'root'})
 export class EventsService {
 
     constructor(
-        private utilitiesService: UtilitiesService
+        private addonService: PepAddonService,
     ) { }
 
-    async getEvents(): Promise<EventInterceptor[]> {
-        return this.utilitiesService.papiClient.addons.api.uuid(config.AddonUUID).file('api').func('event_interceptor').get();
+    async getEvents(addonUUID: string, name: string): Promise<EventInterceptor[]> {
+        return this.addonService.getAddonApiCall(config.AddonUUID, 'api', `event_interceptor?where=AddonUUID="${addonUUID}" And Name="${name}"`).toPromise();
     }
     
     async upsertEvent(obj: EventInterceptor): Promise<EventInterceptor> {
-        return this.utilitiesService.papiClient.addons.api.uuid(config.AddonUUID).file('api').func('event_interceptor').post({}, obj);
+        return this.addonService.postAddonApiCall(config.AddonUUID, 'api', 'event_interceptor', obj).toPromise();
     }
 }

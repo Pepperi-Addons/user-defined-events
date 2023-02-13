@@ -26,6 +26,7 @@
         padding-top: ngx-variables.$spacing-2xl;
         overflow: auto;
         height: inherit;
+        max-width:45rem;
 
         .mapped-fields-top-area {
             height: ngx-variables.$top-bar-field-height;

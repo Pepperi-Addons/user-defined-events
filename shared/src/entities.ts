@@ -1,4 +1,4 @@
-import { AddonData } from "@pepperi-addons/papi-sdk";
+import { AddonData, AddonDataScheme } from "@pepperi-addons/papi-sdk";
 
 export interface EventInterceptor extends AddonData {
     AddonUUID: string;
@@ -17,6 +17,8 @@ export interface LogicBlock {
         AddonUUID: string;
         Name: string;
         BlockExecutionRelativeURL: string;
+        ModuleName: string;
+        ComponentName: string;
     };
     Name: string;
     Configuration: any;
@@ -30,3 +32,5 @@ export interface SelectOption<T> {
 }
 
 export type SelectOptions<T> = Array<SelectOption<T>>;
+
+export type EventDataFields = AddonDataScheme['Fields'];

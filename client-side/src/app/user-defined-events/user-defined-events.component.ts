@@ -7,7 +7,7 @@ import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
 import { PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 
 import { EventsService } from '../services/events-service';
-import { EventInterceptor, groupBy } from 'shared';
+import { EventDataFields, EventInterceptor, groupBy } from 'shared';
 import { CreateEventComponent } from '../create-event/create-event.component';
 import { ActionClickedEventData, CreateFormData, HostEvent } from 'src/entities';
 import { BlockConfigurationLoaderService } from '../services/block-configuration-loader-service';
@@ -15,11 +15,11 @@ import { BlocksService } from '../services/blocks-service';
 import { IPepDraggableItem } from '@pepperi-addons/ngx-lib/draggable-items';
 
 @Component({
-    selector: 'events',
-    templateUrl: './events.component.html',
-    styleUrls: ['./events.component.scss']
+    selector: 'user-defined-events',
+    templateUrl: './user-defined-events.component.html',
+    styleUrls: ['./user-defined-events.component.scss']
 })
-export class EventsComponent implements OnInit {
+export class UserDefinedEventsComponent implements OnInit {
     @Input() hostObject: HostEvent;
 
     @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
@@ -27,6 +27,7 @@ export class EventsComponent implements OnInit {
     events: EventInterceptor[] = [];
     availableBlocks: Array<IPepDraggableItem> = [];
     chosenEvent: EventInterceptor = null;
+    chosenEventData: EventDataFields;
 
     constructor(
         private translate: TranslateService,
@@ -45,7 +46,9 @@ export class EventsComponent implements OnInit {
                 data: {
                     key: relation.AddonUUID,
                     addonUUID: relation.AddonUUID,
-                    blockExecutionRelativeURL: relation.BlockExecutionRelativeURL
+                    blockExecutionRelativeURL: relation.BlockExecutionRelativeURL,
+                    moduleName: relation.ModuleName,
+                    componentName: relation.ComponentName,
                 }
               }
             })
@@ -53,7 +56,7 @@ export class EventsComponent implements OnInit {
     }
 
     updateEvents() {
-        this.eventsService.getEvents().then(events => {
+        this.eventsService.getEvents(this.hostObject.AddonUUID, this.hostObject.Name).then(events => {
             this.events = [...events];
         })
     }
@@ -65,8 +68,7 @@ export class EventsComponent implements OnInit {
                 break;
             }
             case 'Edit': {
-                // this.navigateToEventForm(data.ItemKey);
-                this.chosenEvent = this.events.find(event => event.Key === data.ItemKey);
+                this.navigateToEventForm(data.ItemKey);
                 break;
             }
             case 'Delete': {
@@ -78,6 +80,10 @@ export class EventsComponent implements OnInit {
 
     navigateToEventForm(itemKey: string) {
         this.chosenEvent = this.events.find(event => event.Key === itemKey);
+        const event = this.hostObject.PossibleEvents.find(item => item.EventKey === this.chosenEvent.EventKey);
+        if(event) {
+            this.chosenEventData = event.EventData;
+        }
     }
 
     showDeleteDialog(objID: string) {
@@ -120,10 +126,10 @@ export class EventsComponent implements OnInit {
             content: CreateEventComponent
         }
 
-        this.dialogService.openDialog(CreateEventComponent, formData, dialogConfig).afterClosed().subscribe((createdEvent) => {
+        this.dialogService.openDialog(CreateEventComponent, formData, dialogConfig).afterClosed().subscribe((createdEvent: EventInterceptor) => {
             if (createdEvent) {
-                //this.navigateToEventForm(createdEvent.Key);
-                this.chosenEvent = {...createdEvent};
+                this.events.push(createdEvent);
+                this.navigateToEventForm(createdEvent.Key);
             }
         })
     }

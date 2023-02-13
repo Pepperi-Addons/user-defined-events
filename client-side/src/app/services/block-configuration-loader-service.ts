@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { NgComponentRelation } from "@pepperi-addons/papi-sdk";
+import { LogicBlock } from "shared";
 
 @Injectable({providedIn:'root'})
 export class BlockConfigurationLoaderService {
@@ -25,7 +26,7 @@ export class BlockConfigurationLoaderService {
         }
     }
     
-    getRemoteEntry(relation: NgComponentRelation) {
+    getRemoteEntry(relation: LogicBlock['Relation']) {
         let remoteBasePath = '';
         if (this.devBlocks.has(relation.ModuleName)) {
             remoteBasePath = this.devBlocks.get(relation.ModuleName);

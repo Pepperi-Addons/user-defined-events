@@ -22,7 +22,7 @@ import { PepGenericListModule } from '@pepperi-addons/ngx-composite-lib/generic-
 
 import { config } from '../addon.config';
 
-import { EventsComponent } from './index';
+import { UserDefinedEventsComponent } from './index';
 import { CreateEventComponent } from '../create-event/create-event.component'
 import { EventsListComponent } from '../events-list/events-list.component'
 import { EditEventComponent } from '../edit-event/edit-event.component'
@@ -39,13 +39,13 @@ import { PepTextboxModule } from '@pepperi-addons/ngx-lib/textbox';
 export const routes: Routes = [
     {
         path: '',
-        component: EventsComponent
+        component: UserDefinedEventsComponent
     }
 ];
 
 @NgModule({
     declarations: [
-        EventsComponent,
+        UserDefinedEventsComponent,
         CreateEventComponent,
         EditEventComponent,
         EventsListComponent,
@@ -77,7 +77,7 @@ export const routes: Routes = [
         }),
         RouterModule.forChild(routes)
     ],
-    exports: [EventsComponent],
+    exports: [UserDefinedEventsComponent],
     providers: [
         TranslateStore,
         EventsService,
@@ -87,7 +87,7 @@ export const routes: Routes = [
         // Add here all used services.
     ]
 })
-export class EventsModule {
+export class UserDefinedEventsModule {
     constructor(
         translate: TranslateService,
         private pepAddonService: PepAddonService
