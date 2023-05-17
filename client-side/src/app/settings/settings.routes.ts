@@ -16,6 +16,7 @@ export class EmptyRouteComponent {}
 const routes: Routes = [
     {
         path: ':settingsSectionName/:addonUUID/:slugName',
+        component: SettingsComponent,
         children: [
             {
                 path: '',
