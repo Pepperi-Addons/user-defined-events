@@ -1,4 +1,4 @@
-import { AddonData, AddonDataScheme } from "@pepperi-addons/papi-sdk";
+import { AddonData, AddonDataScheme, SchemeFieldType } from "@pepperi-addons/papi-sdk";
 
 export interface EventInterceptor extends AddonData {
     AddonUUID: string;
@@ -34,3 +34,43 @@ export interface SelectOption<T> {
 export type SelectOptions<T> = Array<SelectOption<T>>;
 
 export type EventDataFields = AddonDataScheme['Fields'];
+
+export const FlowStepsTypes: string[] = [
+    'Group',
+    'LogicBlock'
+];
+
+export type FlowStepsType = typeof FlowStepsTypes[number];
+
+export interface FlowParam {
+    Name: string;
+    Type: SchemeFieldType;
+    Description?: string;
+    DefaultValue: any;
+    Internal: boolean
+}
+
+export interface FlowGroupStep {
+    Type: 'Group';
+    Steps: FlowSteps[];
+    Concurrent: boolean;
+}
+
+export interface FlowBlockStep {
+    Type: 'LogicBlock';
+    Configuration: any;
+    Relation: {
+        AddonUUID: string;
+        Name: string;
+        ExecutionURL: string;
+    }
+}
+
+export type FlowSteps = FlowBlockStep | FlowGroupStep;
+
+export interface Flow extends AddonData {
+    Name: string;
+    Description?: string;
+    Params: FlowParam[];
+    Steps: FlowSteps[];
+}

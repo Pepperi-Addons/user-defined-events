@@ -1,6 +1,7 @@
 
 import { Client, Request } from '@pepperi-addons/debug-server'
 import { EventsService } from './services/events-service'
+import { FlowsService } from './services/flows-service';
 
 export async function event_interceptor(client: Client, request: Request) {
     const service = new EventsService(client);
@@ -56,4 +57,38 @@ export async function event_interceptor_search(client: Client, request: Request)
         }
     }
 
+}
+
+export async function flows(client: Client, request: Request) {
+    const service = new FlowsService(client);
+
+    switch(request.method) {
+        case 'GET': {
+            return await service.find(request.query);
+        }
+        case 'POST': {
+            return await service.upsert(request.body);
+        }
+        default: {
+            const err: any = new Error(`method ${request.method} not allowed`);
+            err.code = 405;
+            throw err;
+        }
+    }
+}
+
+export async function flow_id(client: Client, request: Request) {
+    const service = new FlowsService(client);
+    const itemKey = request.query.key;
+    
+    switch (request.method) {
+        case 'GET': {
+            return await service.findByKey(itemKey)
+        }
+        default: {
+            let err: any = new Error(`Method ${request.method} not allowed`);
+            err.code = 405;
+            throw err;
+        }
+    }
 }
