@@ -10,8 +10,7 @@ The error Message is importent! it will be written in the audit log and help the
 
 import { Client, Request } from '@pepperi-addons/debug-server'
 import {UtilitiesService} from './services/utilities-service';
-import { FlowsScheme } from 'shared';
-import { EventsService } from './services/events-service';
+import { FlowsScheme, FlowsAddonBlockRelation, SettingsRelation } from 'shared';
 import semver from 'semver';
 
 
@@ -27,7 +26,8 @@ export async function uninstall(client: Client, request: Request): Promise<any> 
 }
 
 export async function upgrade(client: Client, request: Request): Promise<any> {
-    // on version 0.6.x, we have changes the addon, so we need to recreate the objects needed for the new addon
+    // on version 0.6.x we have changed the destination of this addon and converted it to flows 
+    // addon instead of events addon, so we need to create the relevant objects
     if (request.body.FromVersion && semver.compare(request.body.FromVersion, '0.6.0') < 0) {
         await createObjects(client)
     }
@@ -42,6 +42,8 @@ async function createObjects(client: Client) {
     try {
         const service = new UtilitiesService(client);
         await service.createAdalTable(FlowsScheme);
+        await service.createRelation(FlowsAddonBlockRelation);
+        await service.createRelation(SettingsRelation);
         return {
             success:true,
             resultObject: {}
@@ -54,9 +56,4 @@ async function createObjects(client: Client) {
             errorMessage: `Error in creating necessary objects . error - ${JSON.stringify(err)}`
         };
     }
-}
-
-async function migrateData(client: Client) {
-    const service = new EventsService(client);
-    await service.migrateInterceptors();
 }

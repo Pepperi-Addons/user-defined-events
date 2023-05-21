@@ -1,8 +1,0 @@
-<events-list *ngIf="events && !chosenEvent" [events]="events" (listActionClicked)="onActionClicked($event)"></events-list>
-<edit-event *ngIf="chosenEvent" 
-    [chosenEvent]="chosenEvent"
-    [availableBlocks]="availableBlocks"
-    [eventData]="chosenEventData"
-    (eventLogicSaved)="saveEventLogic($event)"
-    (backToList)="showList()"
-></edit-event>

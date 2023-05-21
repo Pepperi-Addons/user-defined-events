@@ -1,7 +1,8 @@
-import { AddonData, AddonDataScheme, Relation, SchemeField } from "@pepperi-addons/papi-sdk";
+import { AddonDataScheme, Relation } from "@pepperi-addons/papi-sdk";
 import config from '../../addon.config.json';
 
-const blockName = 'UserDefinedEvents';
+const blockName = 'FlowPicker';
+const relationName = 'UserDefinedFlows'
 const fileName = `file_${config.AddonUUID}`;
 
 export const EventsInterceptorsScheme : AddonDataScheme = {
@@ -129,7 +130,7 @@ export const FlowsScheme: AddonDataScheme = {
     }
 }
 
-export const EventsAddonBlockRelation: Relation = {
+export const FlowsAddonBlockRelation: Relation = {
     RelationName: "AddonBlock",
     Name: blockName,
     Description: `${blockName} addon block`,
@@ -140,5 +141,21 @@ export const EventsAddonBlockRelation: Relation = {
     ComponentName: `${blockName}Component`,
     ModuleName: `${blockName}Module`,
     ElementsModule: 'WebComponents',
-    ElementName: `user-defined-events-element-${config.AddonUUID}`
+    ElementName: `flow-picker-element-${config.AddonUUID}`
+}
+
+export const SettingsRelation: Relation = {
+    RelationName: "SettingsBlock",
+    GroupName: 'Configuration',
+    SlugName: 'flows',
+    Name: relationName,
+    Description: 'Flows',
+    Type: "NgComponent",
+    SubType: "NG14",
+    AddonUUID: config.AddonUUID,
+    AddonRelativeURL: fileName,
+    ComponentName: `${relationName}Component`,
+    ModuleName: `${relationName}Module`,
+    ElementsModule: 'WebComponents',
+    ElementName: `user-defined-flows-element-${config.AddonUUID}`
 }
