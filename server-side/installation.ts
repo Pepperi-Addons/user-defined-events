@@ -10,7 +10,7 @@ The error Message is importent! it will be written in the audit log and help the
 
 import { Client, Request } from '@pepperi-addons/debug-server'
 import {UtilitiesService} from './services/utilities-service';
-import { EventsInterceptorsScheme, EventsAddonBlockRelation } from 'shared';
+import { FlowsScheme } from 'shared';
 import { EventsService } from './services/events-service';
 import semver from 'semver';
 
@@ -27,10 +27,9 @@ export async function uninstall(client: Client, request: Request): Promise<any> 
 }
 
 export async function upgrade(client: Client, request: Request): Promise<any> {
-    // on version 0.5.9 we fixed an issue with interceptors key, 
-    // if we're upgrading from earlier versions we need data migration
-    if (request.body.FromVersion && semver.compare(request.body.FromVersion, '0.5.9') < 0) {
-        await migrateData(client)
+    // on version 0.6.x, we have changes the addon, so we need to recreate the objects needed for the new addon
+    if (request.body.FromVersion && semver.compare(request.body.FromVersion, '0.6.0') < 0) {
+        await createObjects(client)
     }
     return {success:true,resultObject:{}}
 }
@@ -42,8 +41,7 @@ export async function downgrade(client: Client, request: Request): Promise<any> 
 async function createObjects(client: Client) {
     try {
         const service = new UtilitiesService(client);
-        await service.createAdalTable(EventsInterceptorsScheme);
-        await service.createRelation(EventsAddonBlockRelation);
+        await service.createAdalTable(FlowsScheme);
         return {
             success:true,
             resultObject: {}
