@@ -77,6 +77,21 @@ export async function flows(client: Client, request: Request) {
     }
 }
 
+export async function flows_search(client: Client, request: Request) {
+    const service = new FlowsService(client);
+
+    switch(request.method) {
+        case 'POST': {
+            return await service.search(request.body);
+        }
+        default: {
+            const err: any = new Error(`method ${request.method} not allowed`);
+            err.code = 405;
+            throw err;
+        }
+    }
+}
+
 export async function flow_id(client: Client, request: Request) {
     const service = new FlowsService(client);
     const itemKey = request.query.key;
