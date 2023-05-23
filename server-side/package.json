@@ -29,9 +29,10 @@
     },
     "dependencies": {
         "@pepperi-addons/debug-server": "*",
-        "@pepperi-addons/papi-sdk": "*",
-        "shared": "file:../shared",
+        "@pepperi-addons/papi-sdk": "^1.48.0",
         "@types/semver": "^7.3.10",
-        "semver": "^7.3.7"
+        "semver": "^7.3.7",
+        "shared": "file:../shared",
+        "uuid": "^9.0.0"
     }
 }
