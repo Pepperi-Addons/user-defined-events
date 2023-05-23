@@ -10,7 +10,7 @@ The error Message is importent! it will be written in the audit log and help the
 
 import { Client, Request } from '@pepperi-addons/debug-server'
 import {UtilitiesService} from './services/utilities-service';
-import { FlowsAddonBlockRelation, SettingsRelation } from 'shared';
+import { FlowsScheme, FlowsAddonBlockRelation, SettingsRelation } from 'shared';
 import semver from 'semver';
 
 
@@ -41,6 +41,7 @@ export async function downgrade(client: Client, request: Request): Promise<any> 
 async function createObjects(client: Client) {
     try {
         const service = new UtilitiesService(client);
+        await service.createAdalTable(FlowsScheme);
         await service.createRelation(FlowsAddonBlockRelation);
         await service.createRelation(SettingsRelation);
         return {
