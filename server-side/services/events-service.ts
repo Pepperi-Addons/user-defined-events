@@ -30,7 +30,7 @@ export class EventsService {
             if (body.KeyList && body.KeyList.length > 0) {
                 whereClause = this.getWhereClaus('Key', body.KeyList);
             }
-            else if(body.UniqueFieldsList && body.UniqueFieldsList.length > 0) {
+            else if(body.UniqueFieldList && body.UniqueFieldList.length > 0) {
                 throw new Error('search by unique field is not supported');
             }
         }
