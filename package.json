@@ -7,6 +7,7 @@
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"build": "cd ./shared && npm run build && cd .. && cd ./client-side && npm run build && cd .. && cd ./cpi-side && npm run build && cd .. && cd ./server-side && npm run build && cd ..",
 		"init": "npm install && cd ./shared && npm install && cd .. && cd ./client-side && npm install --force && cd .. && cd ./cpi-side && npm install && cd .. && cd ./server-side && npm install && cd ..",
+		"clean": "rm -rf node_modules && rm -rf package-lock.json && cd ./shared && rm -rf node_modules && rm -rf package-lock.json && cd .. && cd ./client-side && rm -rf node_modules && rm -rf package-lock.json && cd .. && cd ./cpi-side && rm -rf node_modules && rm -rf package-lock.json && cd .. && cd ./server-side && rm -rf node_modules && rm -rf package-lock.json && cd ..",
 		"client:singlespa": "cd client-side && ng serve --port 4400 --configuration SingleSpa && cd..",
 		"client:standalone": "cd client-side && ng serve --port 4400 --configuration Standalone && cd..",
 		"publish-addon": "npm run build && publish-addon",
