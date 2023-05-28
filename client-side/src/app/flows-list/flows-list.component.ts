@@ -94,7 +94,8 @@ export class FlowsListComponent implements OnInit {
             },
             inputs: {
                 pager: {
-                    type: 'scroll',
+                    type: 'pages',
+                    size: GL_PAGE_SIZE
                 },
                 selectionType: 'single',
                 emptyState: {
