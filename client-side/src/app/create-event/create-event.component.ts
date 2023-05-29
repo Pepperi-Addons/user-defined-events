@@ -5,7 +5,6 @@ import { PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog'
 
 import { SelectOptions } from 'shared';
 import { CreateFormData } from '../../entities'
-import { EventsService } from '../services/events-service';
 
 @Component({
   selector: 'app-create-event',
@@ -25,7 +24,6 @@ export class CreateEventComponent implements OnInit {
   constructor(
     private dialogRef: MatDialogRef<CreateEventComponent>,
     private translate: TranslateService,
-    private eventsService: EventsService,
     private dialogService: PepDialogService,
     @Inject(MAT_DIALOG_DATA) public incoming: CreateFormData
   ) {
@@ -77,33 +75,33 @@ export class CreateEventComponent implements OnInit {
   }
 
   createEvent() {
-    const chosenEvent = this.incoming.Events.find(item => item.EventKey === this.eventKey);
-    this.eventsService.upsertEvent({
-      EventTitle: this.eventTitle,
-      EventKey: this.eventKey,
-      EventField: this.eventSupportsField ? this.eventField : '',
-      EventFilter: chosenEvent?.EventFilter || {},
-      LogicBlocks: [],
-      AddonUUID: this.incoming.AddonUUID,
-      Name: this.incoming.Name
-    }).then((event => {
-      this.dialogRef.close(event);
-    })).catch(error => {
-      console.log(`event creation failed with the following error: ${JSON.stringify(error)}`);
-      const dialogTitle = this.translate.instant('AddDialog_Failure_Title');
-      const dialogContent = this.translate.instant('AddDialog_Failure_Content');
-      const dialogConfig = this.dialogService.getDialogConfig({}, 'regular');
-      const dialogData: PepDialogData = {
-        actionsType: 'close',
-        content: dialogContent,
-        title: dialogTitle,
-        actionButtons: [],
-        showClose: true,
-        showFooter: true,
-        showHeader: true
-      }
-      this.dialogService.openDefaultDialog(dialogData, dialogConfig);
-    })
+    // const chosenEvent = this.incoming.Events.find(item => item.EventKey === this.eventKey);
+    // this.eventsService.upsertEvent({
+    //   EventTitle: this.eventTitle,
+    //   EventKey: this.eventKey,
+    //   EventField: this.eventSupportsField ? this.eventField : '',
+    //   EventFilter: chosenEvent?.EventFilter || {},
+    //   LogicBlocks: [],
+    //   AddonUUID: this.incoming.AddonUUID,
+    //   Name: this.incoming.Name
+    // }).then((event => {
+    //   this.dialogRef.close(event);
+    // })).catch(error => {
+    //   console.log(`event creation failed with the following error: ${JSON.stringify(error)}`);
+    //   const dialogTitle = this.translate.instant('AddDialog_Failure_Title');
+    //   const dialogContent = this.translate.instant('AddDialog_Failure_Content');
+    //   const dialogConfig = this.dialogService.getDialogConfig({}, 'regular');
+    //   const dialogData: PepDialogData = {
+    //     actionsType: 'close',
+    //     content: dialogContent,
+    //     title: dialogTitle,
+    //     actionButtons: [],
+    //     showClose: true,
+    //     showFooter: true,
+    //     showHeader: true
+    //   }
+    //   this.dialogService.openDefaultDialog(dialogData, dialogConfig);
+    // })
   }
 
   close() {
