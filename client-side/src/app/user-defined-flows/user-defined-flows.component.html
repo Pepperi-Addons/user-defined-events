@@ -1,8 +1,1 @@
-<flows-list #FlowsList *ngIf="!chosenFlow" (listActionClicked)="onActionClicked($event)"></flows-list>
-<!-- <edit-event *ngIf="chosenFlow" 
-    [chosenEvent]="chosenFlow"
-    [availableBlocks]="availableBlocks"
-    [eventData]="chosenFlowData"
-    (eventLogicSaved)="saveEventLogic($event)"
-    (backToList)="showList()"
-></edit-event> -->
+<flows-list #flowsList (listActionClicked)="onActionClicked($event)"></flows-list>
