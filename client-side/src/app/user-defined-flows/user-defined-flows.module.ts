@@ -27,9 +27,9 @@ import { config } from '../addon.config';
 import { UserDefinedFlowsComponent } from './index';
 import { CreateFlowComponent } from '../create-flow/create-flow.component'
 import { FlowsListComponent } from '../flows-list/flows-list.component'
-import { EditEventComponent } from '../edit-event/edit-event.component'
+import { FlowBuilderComponent } from '../edit-flow/tabs/flow-builder/flow-builder.component'
 import { EditFlowComponent } from '../edit-flow/edit-flow.component'
-import { BlockEditorComponent } from '../edit-event/block-editor/block-editor.component';
+import { BlockEditorComponent } from '../edit-flow/tabs/flow-builder/block-editor/block-editor.component';
 
 import { BlockConfigurationLoaderService } from '../services/block-configuration-loader-service'
 import { BlocksService } from '../services/blocks-service'
@@ -49,7 +49,7 @@ export const routes: Routes = [
     declarations: [
         UserDefinedFlowsComponent,
         CreateFlowComponent,
-        EditEventComponent,
+        FlowBuilderComponent,
         FlowsListComponent,
         BlockEditorComponent,
         EditFlowComponent

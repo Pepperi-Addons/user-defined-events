@@ -5,16 +5,16 @@ import { IPepDraggableItem } from '@pepperi-addons/ngx-lib/draggable-items';
 import { PepAddonBlockLoaderService } from '@pepperi-addons/ngx-lib/remote-loader';
 import { EventInterceptor, LogicBlock, EventDataFields } from 'shared';
 import { LogicBlockRelation } from 'src/entities';
-import { BlockConfigurationLoaderService } from '../services/block-configuration-loader-service';
-import { BlocksService } from '../services/blocks-service';
-import { UtilitiesService } from '../services/utilities-service';
+import { BlockConfigurationLoaderService } from '../../../services/block-configuration-loader-service';
+import { BlocksService } from '../../../services/blocks-service';
+import { UtilitiesService } from '../../../services/utilities-service';
 
 @Component({
-  selector: 'edit-event',
-  templateUrl: './edit-event.component.html',
-  styleUrls: ['./edit-event.component.scss']
+  selector: 'flow-Builder',
+  templateUrl: './flow-builder.component.html',
+  styleUrls: ['./flow-builder.component.scss']
 })
-export class EditEventComponent implements OnInit {
+export class FlowBuilderComponent implements OnInit {
 
   @Input() chosenEvent: EventInterceptor;
   @Input() availableBlocks: Array<IPepDraggableItem> = [];
