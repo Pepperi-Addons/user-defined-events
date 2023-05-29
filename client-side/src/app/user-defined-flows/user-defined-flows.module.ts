@@ -17,6 +17,7 @@ import { PepTopBarModule } from '@pepperi-addons/ngx-lib/top-bar';
 import { PepDraggableItemsModule } from '@pepperi-addons/ngx-lib/draggable-items';
 import { PepCheckboxModule } from '@pepperi-addons/ngx-lib/checkbox';
 import { PepIconModule } from '@pepperi-addons/ngx-lib/icon';
+import { PepTextboxModule } from '@pepperi-addons/ngx-lib/textbox';
 
 import { PepGenericListModule } from '@pepperi-addons/ngx-composite-lib/generic-list';
 
@@ -24,15 +25,14 @@ import { config } from '../addon.config';
 
 import { UserDefinedFlowsComponent } from './index';
 import { CreateEventComponent } from '../create-event/create-event.component'
-import { EventsListComponent } from '../events-list/events-list.component'
+import { FlowsListComponent } from '../flows-list/flows-list.component'
 import { EditEventComponent } from '../edit-event/edit-event.component'
 import { BlockEditorComponent } from '../edit-event/block-editor/block-editor.component';
 
 import { BlockConfigurationLoaderService } from '../services/block-configuration-loader-service'
-import { EventsService } from '../services/events-service'
 import { BlocksService } from '../services/blocks-service'
 import { UtilitiesService } from '../services/utilities-service';
-import { PepTextboxModule } from '@pepperi-addons/ngx-lib/textbox';
+import { FlowsService } from '../services/flows-service';
 
 
 
@@ -48,7 +48,7 @@ export const routes: Routes = [
         UserDefinedFlowsComponent,
         CreateEventComponent,
         EditEventComponent,
-        EventsListComponent,
+        FlowsListComponent,
         BlockEditorComponent,
     ],
     imports: [
@@ -80,7 +80,7 @@ export const routes: Routes = [
     exports: [UserDefinedFlowsComponent],
     providers: [
         TranslateStore,
-        EventsService,
+        FlowsService,
         BlockConfigurationLoaderService,
         BlocksService,
         UtilitiesService

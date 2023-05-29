@@ -44,4 +44,7 @@ export interface ActionClickedEventData {
     ItemKey?: string
 }
 
+export const GL_PAGE_SIZE = 30;
+export const API_PAGE_SIZE = 100;
+
 

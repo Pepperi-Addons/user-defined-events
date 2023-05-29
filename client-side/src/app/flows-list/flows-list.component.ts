@@ -6,7 +6,7 @@ import { PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog'
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
 import { SearchData } from '@pepperi-addons/papi-sdk';
 import { Flow } from '@pepperi-addons/papi-sdk';
-import { ActionClickedEventData, GL_PAGE_SIZE } from './entities';
+import { ActionClickedEventData, GL_PAGE_SIZE } from '../../entities';
 import { FlowsService } from '../services/flows-service';
 
 @Component({

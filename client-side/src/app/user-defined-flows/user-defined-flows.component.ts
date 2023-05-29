@@ -1,18 +1,14 @@
 import { TranslateService } from '@ngx-translate/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewContainerRef } from '@angular/core';
 
-import { IPepGenericListActions, IPepGenericListDataSource, GenericListComponent } from '@pepperi-addons/ngx-composite-lib/generic-list';
-import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
 import { PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 
-import { EventsService } from '../services/events-service';
-import { EventDataFields, EventInterceptor, groupBy } from 'shared';
-import { CreateEventComponent } from '../create-event/create-event.component';
-import { ActionClickedEventData, CreateFormData, HostEvent } from 'src/entities';
-import { BlockConfigurationLoaderService } from '../services/block-configuration-loader-service';
+import { EventDataFields, Flow } from 'shared';
+import { ActionClickedEventData, HostEvent } from '../../entities';
 import { BlocksService } from '../services/blocks-service';
 import { IPepDraggableItem } from '@pepperi-addons/ngx-lib/draggable-items';
+import { FlowsService } from '../services/flows-service';
+import { AddonData } from '@pepperi-addons/papi-sdk';
 
 @Component({
     selector: 'user-defined-flows',
@@ -22,22 +18,20 @@ import { IPepDraggableItem } from '@pepperi-addons/ngx-lib/draggable-items';
 export class UserDefinedFlowsComponent implements OnInit {
     @Input() hostObject: HostEvent;
 
-    @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
+    @Output() hostFlows: EventEmitter<any> = new EventEmitter<any>();
 
-    events: EventInterceptor[] = [];
     availableBlocks: Array<IPepDraggableItem> = [];
-    chosenEvent: EventInterceptor = null;
-    chosenEventData: EventDataFields;
+    chosenFlow: Flow = null;
+    chosenFlowData: EventDataFields;
 
     constructor(
         private translate: TranslateService,
-        private eventsService: EventsService,
+        private flowsService: FlowsService,
         private dialogService: PepDialogService,
         private blocksService: BlocksService) {
     }
 
     ngOnInit() {
-        this.updateEvents();
         this.blocksService.getAvailableBlocks().then(relations => {
             this.availableBlocks = relations.map(relation => {
               return {
@@ -55,20 +49,14 @@ export class UserDefinedFlowsComponent implements OnInit {
           })
     }
 
-    updateEvents() {
-        this.eventsService.getEvents(this.hostObject.AddonUUID, this.hostObject.Name).then(events => {
-            this.events = [...events];
-        })
-    }
-
     onActionClicked(data: ActionClickedEventData) {
         switch (data.ActionType) {
             case 'Add': {
-                this.openCreateEventsForm();
+                this.navigateToFlowForm('');
                 break;
             }
             case 'Edit': {
-                this.navigateToEventForm(data.ItemKey);
+                this.navigateToFlowForm(data.ItemKey);
                 break;
             }
             case 'Delete': {
@@ -78,34 +66,43 @@ export class UserDefinedFlowsComponent implements OnInit {
         }
     }
 
-    navigateToEventForm(itemKey: string) {
-        this.chosenEvent = this.events.find(event => event.Key === itemKey);
-        const event = this.hostObject.PossibleEvents.find(item => item.EventKey === this.chosenEvent.EventKey);
-        if(event) {
-            this.chosenEventData = event.EventData;
+    navigateToFlowForm(itemKey: string) {
+        if(itemKey != '') {
+            this.flowsService.getFlowByID(itemKey).then(flow => {
+                this.chosenFlow = flow
+            });
+        }
+        else {
+            this.chosenFlow = {
+                Name: '',
+                Params: [],
+                Steps: [],
+                Description:''
+            };
         }
     }
 
     showDeleteDialog(objID: string) {
         const dataMsg = new PepDialogData({
-            title: this.translate.instant('Events_DeleteDialogTitle'),
+            title: this.translate.instant('Flows_DeleteDialogTitle'),
             actionsType: 'cancel-delete',
-            content: this.translate.instant('Events_DeleteDialogContent')
+            content: this.translate.instant('Flows_DeleteDialogContent')
         });
         this.dialogService.openDefaultDialog(dataMsg).afterClosed()
             .subscribe(async (isDeletePressed) => {
                 if (isDeletePressed) {
                     try {
-                        const obj: EventInterceptor = this.events.find(item => item.Key === objID);
-                        obj.Hidden = true;
-                        await this.eventsService.upsertEvent(obj);
-                        this.updateEvents();
+                        const obj: any = {
+                            Key: objID,
+                            Hidden: true
+                        };
+                        await this.flowsService.upsertFlows(obj);
                     }
                     catch (error) {
                         const dataMsg = new PepDialogData({
-                            title: this.translate.instant('Events_DeleteFailedDialogTitle'),
+                            title: this.translate.instant('Flows_DeleteFailedDialogTitle'),
                             actionsType: 'close',
-                            content: this.translate.instant('Events_DeleteFailedDialogError')
+                            content: this.translate.instant('Flows_DeleteFailedDialogError')
                         });
                         this.dialogService.openDefaultDialog(dataMsg);
                     }
@@ -113,33 +110,13 @@ export class UserDefinedFlowsComponent implements OnInit {
             });
     }
 
-    openCreateEventsForm() {
-        const groupedEvents = groupBy(this.events, (item) => item.EventKey);
-        const formData: CreateFormData = {
-            Events: this.hostObject.PossibleEvents,
-            AddonUUID: this.hostObject.AddonUUID,
-            Name: this.hostObject.Name,
-            CurrentEvents: groupedEvents,
-        }
-        const dialogConfig = this.dialogService.getDialogConfig({}, 'regular');
-        dialogConfig.data = {
-            content: CreateEventComponent
-        }
-
-        this.dialogService.openDialog(CreateEventComponent, formData, dialogConfig).afterClosed().subscribe((createdEvent: EventInterceptor) => {
-            if (createdEvent) {
-                this.events.push(createdEvent);
-                this.navigateToEventForm(createdEvent.Key);
-            }
-        })
-    }
+   
 
     async saveEventLogic(logicBlocks) {
         try {
-            this.chosenEvent.LogicBlocks = [...logicBlocks];
-            await this.eventsService.upsertEvent(this.chosenEvent);
-            this.updateEvents();
-            this.chosenEvent = null;
+            this.chosenFlow.LogicBlocks = [...logicBlocks];
+            await this.flowsService.upsertFlows(this.chosenFlow);
+            this.chosenFlow = null;
         }
         catch(error) {
             console.log(`cannot update event. got error ${error}`);
@@ -147,7 +124,6 @@ export class UserDefinedFlowsComponent implements OnInit {
     }
 
     showList() {
-        this.chosenEvent = null;
-        this.updateEvents();
+        this.chosenFlow = null;
     }
 }
