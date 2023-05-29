@@ -3,12 +3,12 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewContaine
 
 import { PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 
-import { EventDataFields, Flow } from 'shared';
+import { EventDataFields } from 'shared';
 import { ActionClickedEventData, HostEvent } from '../../entities';
 import { BlocksService } from '../services/blocks-service';
 import { IPepDraggableItem } from '@pepperi-addons/ngx-lib/draggable-items';
 import { FlowsService } from '../services/flows-service';
-import { AddonData } from '@pepperi-addons/papi-sdk';
+import { Flow} from '@pepperi-addons/papi-sdk';
 
 @Component({
     selector: 'user-defined-flows',

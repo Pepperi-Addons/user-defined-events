@@ -3,8 +3,7 @@ import { Injectable } from "@angular/core";
 import { PepAddonService } from "@pepperi-addons/ngx-lib";
 
 import { config } from '../addon.config'
-import { EventInterceptor, Flow } from 'shared';
-import { SearchBody, SearchData } from "@pepperi-addons/papi-sdk";
+import { SearchBody, SearchData, Flow} from "@pepperi-addons/papi-sdk";
 import { IPepGenericListParams } from "@pepperi-addons/ngx-composite-lib/generic-list";
 import { API_PAGE_SIZE } from "../../entities";
 
