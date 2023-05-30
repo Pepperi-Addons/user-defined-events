@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { SettingsComponent } from '.';
+import { EditFlowComponent } from '../edit-flow/edit-flow.component';
 
 import { UserDefinedFlowsComponent } from '../user-defined-flows';
 
@@ -21,6 +22,10 @@ const routes: Routes = [
             {
                 path: '',
                 component: UserDefinedFlowsComponent
+            },
+            {
+                path: ':flow_id',
+                component: EditFlowComponent
             },
             { path: '**', component: EmptyRouteComponent }
         ]

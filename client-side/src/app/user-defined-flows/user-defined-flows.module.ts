@@ -18,15 +18,17 @@ import { PepDraggableItemsModule } from '@pepperi-addons/ngx-lib/draggable-items
 import { PepCheckboxModule } from '@pepperi-addons/ngx-lib/checkbox';
 import { PepIconModule } from '@pepperi-addons/ngx-lib/icon';
 import { PepTextboxModule } from '@pepperi-addons/ngx-lib/textbox';
+import { PepTextareaModule } from '@pepperi-addons/ngx-lib/textarea';
 
 import { PepGenericListModule } from '@pepperi-addons/ngx-composite-lib/generic-list';
 
 import { config } from '../addon.config';
 
 import { UserDefinedFlowsComponent } from './index';
-import { CreateEventComponent } from '../create-event/create-event.component'
+import { CreateFlowComponent } from '../create-flow/create-flow.component'
 import { FlowsListComponent } from '../flows-list/flows-list.component'
 import { EditEventComponent } from '../edit-event/edit-event.component'
+import { EditFlowComponent } from '../edit-flow/edit-flow.component'
 import { BlockEditorComponent } from '../edit-event/block-editor/block-editor.component';
 
 import { BlockConfigurationLoaderService } from '../services/block-configuration-loader-service'
@@ -46,10 +48,11 @@ export const routes: Routes = [
 @NgModule({
     declarations: [
         UserDefinedFlowsComponent,
-        CreateEventComponent,
+        CreateFlowComponent,
         EditEventComponent,
         FlowsListComponent,
         BlockEditorComponent,
+        EditFlowComponent
     ],
     imports: [
         BrowserAnimationsModule,
@@ -63,6 +66,7 @@ export const routes: Routes = [
         PepDraggableItemsModule,
         PepCheckboxModule,
         PepTextboxModule,
+        PepTextareaModule,
         PepIconModule,
         MatIconModule,
         MatDialogModule,

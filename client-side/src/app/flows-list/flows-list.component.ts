@@ -5,8 +5,8 @@ import { IPepFieldClickEvent } from '@pepperi-addons/ngx-lib';
 import { PepDialogData, PepDialogService } from '@pepperi-addons/ngx-lib/dialog';
 import { PepSelectionData } from '@pepperi-addons/ngx-lib/list';
 import { SearchData } from '@pepperi-addons/papi-sdk';
-import { Flow } from 'shared';
-import { ActionClickedEventData, GL_PAGE_SIZE } from 'src/entities';
+import { Flow } from '@pepperi-addons/papi-sdk';
+import { ActionClickedEventData, GL_PAGE_SIZE } from '../../entities';
 import { FlowsService } from '../services/flows-service';
 
 @Component({
@@ -42,7 +42,6 @@ export class FlowsListComponent implements OnInit {
             init: async (params: IPepGenericListParams) => {
                 try {
                     this.flows = await this.flowsService.getFlows(params);
-                    console.log('flows received', this.flows);
                 }
                 catch (err) {
                     console.log('failed getting flows. got error', JSON.stringify(err));
@@ -146,6 +145,10 @@ export class FlowsListComponent implements OnInit {
             ActionType: 'Edit',
             ItemKey: obj.Key,
         });
+    }
+
+    reloadList() {
+        this.dataSource = this.getDataSource();
     }
 
     private showMessageInDialog(titleTranslationKey: string, messageTranslationKey: string) {

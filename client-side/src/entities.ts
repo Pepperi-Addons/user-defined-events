@@ -22,13 +22,6 @@ export interface UserEvent {
     EventData: EventDataFields;
 }
 
-export interface CreateFormData {
-    Events: UserEvent[];
-    AddonUUID: string;
-    Name: string;
-    CurrentEvents: Map<string, EventInterceptor[]>
-}
-
 export interface LogicBlockEditorOptions extends IAddonBlockLoaderDialogOptions {
     block: LogicBlock;
 }

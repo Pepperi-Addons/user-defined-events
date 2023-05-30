@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid'
 import { Client } from "@pepperi-addons/debug-server";
-import { AddonData, FindOptions, SearchBody } from "@pepperi-addons/papi-sdk";
-import { Flow, FlowsScheme } from "shared";
+import { AddonData, FindOptions, SearchBody, Flow } from "@pepperi-addons/papi-sdk";
+import { FlowsScheme } from "shared";
 import { UtilitiesService } from "./utilities-service";
 
 export class FlowsService {
