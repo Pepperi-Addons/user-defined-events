@@ -1,12 +1,45 @@
 import '@pepperi-addons/cpi-node'
 import  config  from '../addon.config.json';
 import { EventInterceptor, EventsInterceptorsScheme, groupBy, LogicBlock } from 'shared';
+import { Relation } from '@pepperi-addons/papi-sdk';
+import { DateUtils } from './date_utils';
 
-export async function load(configuration: any) {
-    const events = (await pepperi.api.adal.getList({
+export const router = Router()
+
+export async function load() {
+    let relation: Relation = {
+        Type: "CPIAddonAPI",
+        AddonRelativeURL: "/events/after_sync_registration",
+        AddonUUID: config.AddonUUID,
+        RelationName: "AfterSync",
+        Name: "events_after_sync_registration",
+    }
+    
+    await pepperi.addons.data.relations.upsert(relation);
+    let lastSyncDate = new Date(1970,1,1);
+    const events = await getEvents(lastSyncDate);
+    subscribe(events);
+}
+
+router.post('/after_sync_registration', async (req, res) => {
+    const lastSyncTime = DateUtils.getLastSyncDataTimeMills(req.body.JobInfoResponse.ClientInfo.LastSyncDateTime);
+    const events = await getEvents(new Date(lastSyncTime))
+    res.json({
+        ShouldReload: events && events.length > 0
+    });
+})
+
+async function getEvents(fromDate: Date) {
+    console.log(`inside getEvents, date recieved is ${fromDate}`);
+    return (await pepperi.api.adal.getList({
         addon: config.AddonUUID,
         table: EventsInterceptorsScheme.Name
-    })).objects as EventInterceptor[];
+    })).objects.filter(item => {
+        return new Date(item.ModificationDateTime) > fromDate 
+    }) as EventInterceptor[];
+}
+
+async function subscribe(events: EventInterceptor[]) {
  
     console.log(`after getting events, received: ${JSON.stringify(events)}`);
     events.forEach(event => {
