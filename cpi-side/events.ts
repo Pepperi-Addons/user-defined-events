@@ -5,6 +5,7 @@ import { Relation } from '@pepperi-addons/papi-sdk';
 import { DateUtils } from './date_utils';
 
 export const router = Router()
+let lastSyncEvents: number = 0;
 
 export async function load() {
     let relation: Relation = {
@@ -16,27 +17,39 @@ export async function load() {
     }
     
     await pepperi.addons.data.relations.upsert(relation);
-    let lastSyncDate = new Date(1970,1,1);
-    const events = await getEvents(lastSyncDate);
+    const events = await getEvents();
+    lastSyncEvents = events.length;
     subscribe(events);
 }
 
-router.post('/after_sync_registration', async (req, res) => {
-    const lastSyncTime = DateUtils.getLastSyncDataTimeMills(req.body.JobInfoResponse.ClientInfo.LastSyncDateTime);
-    const events = await getEvents(new Date(lastSyncTime))
-    res.json({
-        ShouldReload: events && events.length > 0
-    });
+router.post('/after_sync_registration', async (req, res, next) => {
+    shouldReload(req).then(shouldReload => {
+        res.json({
+            ShouldReload: shouldReload
+        });
+    }).catch(next);
 })
 
-async function getEvents(fromDate: Date) {
-    console.log(`inside getEvents, date recieved is ${fromDate}`);
+async function shouldReload(req) {
+    const lastSyncTime = DateUtils.getLastSyncDataTimeMills(req.body.JobInfoResponse.ClientInfo.LastSyncDateTime);
+    const events = await getEvents();
+    const modified = events.filter(item => {
+        return new Date(item.ModificationDateTime!) > new Date(lastSyncTime)
+    })
+    if(events.length > lastSyncEvents && modified.length === 0) {
+        console.error(`shouldReload => we shouldn't get here! events.length > lastSyncEvents but no modified addons :(`);
+    }
+    let shouldReload = (modified && modified.length > 0) || (events.length != lastSyncEvents)
+    lastSyncEvents = events.length;
+    console.log(`shouldReload => return value: ${shouldReload}`);
+    return shouldReload;
+}
+
+async function getEvents() {
     return (await pepperi.api.adal.getList({
         addon: config.AddonUUID,
         table: EventsInterceptorsScheme.Name
-    })).objects.filter(item => {
-        return new Date(item.ModificationDateTime) > fromDate 
-    }) as EventInterceptor[];
+    })).objects as EventInterceptor[];
 }
 
 async function subscribe(events: EventInterceptor[]) {
