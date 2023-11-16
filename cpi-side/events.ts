@@ -41,6 +41,7 @@ async function shouldReload(req) {
     }
     let shouldReload = (modified && modified.length > 0) || (events.length != lastSyncEvents)
     lastSyncEvents = events.length;
+    console.log(`shouldReload => return value: ${shouldReload}`);
     return shouldReload;
 }
 
