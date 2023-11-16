@@ -37,7 +37,7 @@ async function shouldReload(req) {
         return new Date(item.ModificationDateTime!) > new Date(lastSyncTime)
     })
     if(events.length > lastSyncEvents && modified.length === 0) {
-        console.error(`shouldReload => we shouldn't get here! events.length > lastSyncEvents`);
+        console.error(`shouldReload => we shouldn't get here! events.length > lastSyncEvents but no modified addons :(`);
     }
     let shouldReload = (modified && modified.length > 0) || (events.length != lastSyncEvents)
     lastSyncEvents = events.length;
