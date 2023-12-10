@@ -18,5 +18,8 @@
     "CPISide": [
       "events.ts"
     ]
+  },
+  "AddonPackage": {
+    "ClientZip": false
   }
 }
