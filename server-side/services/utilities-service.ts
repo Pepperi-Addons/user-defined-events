@@ -1,4 +1,4 @@
-import { PapiClient, InstalledAddon, AddonDataScheme, Relation } from '@pepperi-addons/papi-sdk'
+import { PapiClient, InstalledAddon, AddonDataScheme, Relation, ConfigurationScheme } from '@pepperi-addons/papi-sdk'
 import { Client } from '@pepperi-addons/debug-server';
 
 export class UtilitiesService {
@@ -21,5 +21,9 @@ export class UtilitiesService {
 
     async createRelation(relation: Relation): Promise<Relation> {
         return await this.papiClient.addons.data.relations.upsert(relation);
+    }
+
+    async createConfigurationSchema(configurationScheme: ConfigurationScheme) {
+        return await this.papiClient.addons.configurations.schemes.upsert(configurationScheme)
     }
 }
