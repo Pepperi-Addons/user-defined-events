@@ -34,35 +34,34 @@ export interface SelectOption<T> {
 
 export const configurationSchemaName = 'EventsConfigurations';
 
+export const configurationFields = {
+    AddonUUID: {
+        Type: "String",
+    },
+    ContextKey: {
+        Type: "String",
+    },
+    Title: {
+        Type: "String",
+    },
+    EventKey: {
+        Type: "String",
+    },
+    EventField: {
+        Type: "String",
+    },
+    EventFilter: {
+        Type: "Object",
+    },
+    Flow: {
+        Type: "String",
+    },
+} as any;
+
 export const configurationSchema: ConfigurationScheme = {
     Name: configurationSchemaName,
     AddonUUID: AddonUUID,
-    Fields: {
-        AddonUUID: {
-            Type: "String",
-        },
-        ContextKey: {
-            Type: "String",
-        },
-        Title: {
-            Type: "String",
-        },
-        EventKey: {
-            Type: "String",
-        },
-        EventField: {
-            Type: "String",
-        },
-        EventFilter: {
-            Type: "Object",
-        },
-        LogicBlocks: {
-            Type: "Array",
-        },
-        Flow: {
-            Type: "String",
-        },
-    },
+    Fields: configurationFields,
     SyncData:
     {
         Sync: true,
