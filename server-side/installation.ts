@@ -12,6 +12,7 @@ import { Client, Request } from '@pepperi-addons/debug-server'
 import {UtilitiesService} from './services/utilities-service';
 import { EventsInterceptorsScheme, EventsAddonBlockRelation } from 'shared';
 import { EventsService } from './services/events-service';
+import { configurationSchema } from 'shared';
 import semver from 'semver';
 
 
@@ -32,6 +33,10 @@ export async function upgrade(client: Client, request: Request): Promise<any> {
     if (request.body.FromVersion && semver.compare(request.body.FromVersion, '0.5.9') < 0) {
         await migrateData(client)
     }
+    if (request.body.FromVersion && semver.compare(request.body.FromVersion, '0.8.0') < 0) {
+        const service = new UtilitiesService(client);
+        await service.createConfigurationSchema(configurationSchema);
+    }
     return {success:true,resultObject:{}}
 }
 
@@ -44,6 +49,7 @@ async function createObjects(client: Client) {
         const service = new UtilitiesService(client);
         await service.createAdalTable(EventsInterceptorsScheme);
         await service.createRelation(EventsAddonBlockRelation);
+        await service.createConfigurationSchema(configurationSchema);
         return {
             success:true,
             resultObject: {}
